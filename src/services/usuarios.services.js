@@ -2,20 +2,11 @@ const UsuariosModel = require("../models/usuarios.model")
 const CarritosModel = require("../models/carritos.model")
 const FavoritosModel = require("../models/favoritos.model")
 const argon = require("argon2")
-const { validationResult } = require("express-validator")
+
 
 
 const registrarUsuarioBD = async (body,req) =>{
-    const errorValidator = validationResult(req)
-   
-
-    if(!errorValidator.isEmpty()){
-        return {
-            msg:errorValidator.array(),
-            statusCode: 422
-        }
-        
-    }
+    
     try {
         const nuevoUsuario = new UsuariosModel(body)
         nuevoUsuario.contrasenia = await argon.hash(body.contrasenia)
