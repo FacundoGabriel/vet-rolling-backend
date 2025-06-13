@@ -5,7 +5,7 @@ const argon = require("argon2")
 
 
 
-const registrarUsuarioBD = async (body,req) =>{
+const registrarUsuarioBD = async (body) =>{
     
     try {
         const nuevoUsuario = new UsuariosModel(body)
@@ -33,8 +33,93 @@ const registrarUsuarioBD = async (body,req) =>{
 
 }
 
+const altaLogicaUsuarioPorIdBD = async (idUsuario) =>{
+    
+    try {
+        const usuario = await UsuariosModel.findOne({_id: idUsuario})
+         if (!usuario) {
+           return {
+             msg: "Usuario no encontrado",
+              statusCode: 404,
+            };
+         }
+        usuario.estado = "habilitado"
+        await usuario.save()
+
+        return{
+            msg:"Usuario habilitado",
+            statusCode:200,         
+        }
+    } catch (error) {
+        return{
+            error,
+            statusCode: 500
+        }
+    }
+}
+
+const bajaLogicaUsuarioPorIdBD = async (idUsuario) =>{
+    
+    try {
+        const usuario = await UsuariosModel.findOne({_id: idUsuario})
+        if (!usuario) {
+           return {
+             msg: "Usuario no encontrado",
+              statusCode: 404,
+            };
+         }
+        usuario.estado = "deshabilitado"
+        await usuario.save()
+
+        return{
+            msg:"Usuario deshabilitado",
+            statusCode:200,         
+        }
+    } catch (error) {
+        return{
+            error,
+            statusCode: 500
+        }
+    }
+}
+
+const bajaFisicaUsuarioPorIdBD = async (idUsuario) =>{
+    
+    try {
+
+        const usuario = await UsuariosModel.findOne({_id: idUsuario})
+
+
+        if(!usuario){
+            return{
+                msg:"Usuario no encontrado",
+                statusCode: 404,
+            }
+        }
+
+         await CarritosModel.findByIdAndDelete(usuario.idCarrito);
+         await FavoritosModel.findByIdAndDelete(usuario.idFavoritos);
+         await UsuariosModel.findByIdAndDelete({_id: idUsuario})
+        
+
+        return{
+            msg:"Usuario borrado con exito!",
+            statusCode:200,         
+        }
+    } catch (error) {
+        console.log(error)
+        return{
+            error,
+            statusCode: 500
+        }
+    }
+}
+
 module.exports = {
     registrarUsuarioBD,
+    altaLogicaUsuarioPorIdBD,
+    bajaLogicaUsuarioPorIdBD,
+    bajaFisicaUsuarioPorIdBD,
 
 
 }
