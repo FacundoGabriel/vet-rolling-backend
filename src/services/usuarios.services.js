@@ -2,6 +2,7 @@ const UsuariosModel = require("../models/usuarios.model")
 const CarritosModel = require("../models/carritos.model")
 const FavoritosModel = require("../models/favoritos.model")
 const argon = require("argon2")
+const jwt = require("jsonwebtoken");
 
 
 
@@ -29,9 +30,60 @@ const registrarUsuarioBD = async (body) =>{
             error, 
             statusCode:500
         }
+const iniciarSesionUsuarioDB = async (body) => {
+  try {
+    const usuarioExiste = await UsuariosModel.findOne({
+      emailUsuario: body.emailUsuario,
+    });
+
+    if (!usuarioExiste) {
+      return {
+        msg: "ERROR. El usuario y/o contraseña incorrectas.",
+        statusCode: 401,
+      };
     }
 
-}
+    if (!usuarioExiste.estado) {
+      return {
+        msg: "ERROR. Su cuenta está deshabilitada",
+        statusCode: 403,
+      };
+    }
+    
+     const verificarContrasenia = await argon.verify(
+      usuarioExiste.contrasenia,
+      body.contrasenia
+    );
+
+    if (verificarContrasenia) {
+      const payload = {
+        idUsuario: usuarioExiste._id,
+        rolUsuario: usuarioExiste.rol,
+      };
+
+
+      const token = jwt.sign(payload, process.env.JWT_SECRET);
+
+      return {
+        msg: "Usuario logueado correctamente",
+        token,
+        statusCode: 200,
+      };
+    } else {
+      return {
+        msg: "ERROR. El usuario y/o contraseña incorrectas.",
+        statusCode: 401,
+      };
+    }
+  } catch (error) {
+    return {
+      error,
+      statusCode: 500,
+    };
+  }
+};
+
+
 
 const altaLogicaUsuarioPorIdBD = async (idUsuario) =>{
     
@@ -117,9 +169,9 @@ const bajaFisicaUsuarioPorIdBD = async (idUsuario) =>{
 
 module.exports = {
     registrarUsuarioBD,
+    iniciarSesionUsuarioDB,
     altaLogicaUsuarioPorIdBD,
     bajaLogicaUsuarioPorIdBD,
     bajaFisicaUsuarioPorIdBD,
+  };
 
-
-}

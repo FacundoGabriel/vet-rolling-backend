@@ -1,4 +1,5 @@
-const { registrarUsuarioBD, altaLogicaUsuarioPorIdBD, bajaLogicaUsuarioPorIdBD, bajaFisicaUsuarioPorIdBD } = require("../services/usuarios.services")
+const { registrarUsuarioBD, iniciarSesionUsuarioDB, altaLogicaUsuarioPorIdBD, bajaLogicaUsuarioPorIdBD, bajaFisicaUsuarioPorIdBD } = require("../services/usuarios.services")
+
 
 const registrarUsuario = async (req,res) =>{
     const {msg, statusCode, error} = await registrarUsuarioBD (req.body)
@@ -9,6 +10,16 @@ const registrarUsuario = async (req,res) =>{
         res.status(statusCode).json(error)
     }
 }
+
+const iniciarSesionUsuario = async(req, res) =>{
+    const { msg, statusCode, token, error} = await iniciarSesionUsuarioDB(req.body)
+    try {
+        res.status(statusCode).json({msg, statusCode, token})
+    } catch {
+        res.status(statusCode).json(error)
+    }
+}
+
 
 const altaLogicaUsuarioPorId = async(req,res) =>{
     const {msg, statusCode, error} = await altaLogicaUsuarioPorIdBD(req.params.id)
@@ -38,8 +49,12 @@ const bajaFisicaUsuarioPorId = async(req,res) =>{
 
 module.exports = {
     registrarUsuario,
+    iniciarSesionUsuario,
     altaLogicaUsuarioPorId,
     bajaLogicaUsuarioPorId,
     bajaFisicaUsuarioPorId,
+  }
 
-}
+
+
+
