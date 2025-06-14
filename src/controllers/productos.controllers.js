@@ -2,6 +2,7 @@ const {
   crearUnProductoBD,
   obtenerTodosLosProductosBD,
   obtenerUnProductoPorIdBD,
+  actualizarUnProductoBD,
 } = require("../services/productos.services");
 
 const crearUnProducto = async (req, res) => {
@@ -34,8 +35,21 @@ const obtenerUnProductoPorId = async (req, res) => {
   }
 };
 
+const actualizarUnProducto = async (req, res) => {
+  const { statusCode, msg, error } = await actualizarUnProductoBD(
+    req.params.id,
+    req.body
+  );
+  try {
+    res.status(statusCode).json({ msg });
+  } catch (error) {
+    res.status(statusCode).json({ error });
+  }
+};
+
 module.exports = {
   crearUnProducto,
   obtenerTodosLosProductos,
   obtenerUnProductoPorId,
+  actualizarUnProducto,
 };
