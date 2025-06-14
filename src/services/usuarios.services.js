@@ -30,6 +30,9 @@ const registrarUsuarioBD = async (body) =>{
             error, 
             statusCode:500
         }
+
+        }
+        }
 const iniciarSesionUsuarioDB = async (body) => {
   try {
     const usuarioExiste = await UsuariosModel.findOne({
@@ -173,5 +176,5 @@ module.exports = {
     altaLogicaUsuarioPorIdBD,
     bajaLogicaUsuarioPorIdBD,
     bajaFisicaUsuarioPorIdBD,
-  };
+  }
 
