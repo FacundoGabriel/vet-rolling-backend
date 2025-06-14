@@ -4,6 +4,7 @@ const {
   obtenerTodosLosProductos,
   crearUnProducto,
   obtenerUnProductoPorId,
+  actualizarUnProducto,
 } = require("../controllers/productos.controllers");
 const { check } = require("express-validator");
 const router = Router();
@@ -31,6 +32,18 @@ router.post(
   ],
   validarCampos,
   crearUnProducto
+);
+
+router.put(
+  "/:id",
+  [
+    check(
+      "id",
+      "ERROR. ID incorrecto. El formato no corresponde a mongoose"
+    ).isMongoId(),
+  ],
+  validarCampos,
+  actualizarUnProducto
 );
 
 module.exports = router;

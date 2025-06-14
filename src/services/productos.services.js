@@ -53,8 +53,24 @@ const obtenerUnProductoPorIdBD = async (idProducto) => {
   }
 };
 
+const actualizarUnProductoBD = async (idProducto, body) => {
+  try {
+    await ProductosModel.findByIdAndUpdate({ _id: idProducto }, body);
+    return {
+      msg: "El producto se actualizó correctamente",
+      statusCode: 200,
+    };
+  } catch (error) {
+    return {
+      error,
+      statusCode: 500,
+    };
+  }
+};
+
 module.exports = {
   crearUnProductoBD,
   obtenerTodosLosProductosBD,
   obtenerUnProductoPorIdBD,
+  actualizarUnProductoBD,
 };
