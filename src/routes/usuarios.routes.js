@@ -1,8 +1,9 @@
 const { Router } = require("express");
-const { registrarUsuario, iniciarSesionUsuario, altaLogicaUsuarioPorId, bajaLogicaUsuarioPorId, bajaFisicaUsuarioPorId } = require("../controllers/usuarios.controllers");
+const { registrarUsuario, iniciarSesionUsuario, altaLogicaUsuarioPorId, bajaLogicaUsuarioPorId, bajaFisicaUsuarioPorId, editarInfoUsuarioPorId, cambiarContraseniaUsuario } = require("../controllers/usuarios.controllers");
 const router = Router();
 const { check } = require("express-validator")
 const validarCampos = require("../middlewares/validarCampos");
+const auth = require("../middlewares/auth");
 
 router.post("/registro",[
     check("nombreUsuario", "Campo USUARIO esta vacio").notEmpty(),
@@ -18,6 +19,7 @@ router.post("/inicio-sesion",[
     check("contrasenia", "ERROR. caracteres soportados solo entre 8 y 40").isLength({min:8},{max:40}),
 ], validarCampos, iniciarSesionUsuario)
 
+
 router.put("/habilitar/:id",  [
     check("id", "ID incorrecto. Formato no corresponde a mongoose").isMongoId()
 ], validarCampos, altaLogicaUsuarioPorId)
@@ -28,6 +30,19 @@ router.delete("/:id",[
     check("id", "ID incorrecto. Formato no corresponde a mongoose").isMongoId()
 ], validarCampos, bajaFisicaUsuarioPorId)
 
+router.put("/:id",[
+    check("id", "ID incorrecto. Formato no corresponde a mongoose").isMongoId(),
+    check("nombreUsuario", "Campo USUARIO esta vacio").notEmpty(),
+    check("emailUsuario", "Campo EMAIL vacio").notEmpty(),
+    check("telefono", "Campo TELEFONO vacio").notEmpty(),
+],validarCampos, auth("usuario"), editarInfoUsuarioPorId)
+
+
+router.put("/cambiar-contrasenia/:id", [
+    check("id", "ID incorrecto. Formato no corresponde a mongoose").isMongoId(), 
+    check("actual", "Campo CONTRASEÑA vacio").notEmpty(),
+    check("nueva", "ERROR. caracteres soportados solo entre 8 y 40").isLength({min:8},{max:40})
+], validarCampos, auth("usuario"), cambiarContraseniaUsuario)
 
 
 module.exports = router;
