@@ -3,6 +3,7 @@ const CarritosModel = require("../models/carritos.model")
 const FavoritosModel = require("../models/favoritos.model")
 const argon = require("argon2")
 const jwt = require("jsonwebtoken");
+const { registroExitoso } = require("../utils/mensajes.nodemailer.utils");
 
 
 
@@ -17,14 +18,22 @@ const registrarUsuarioBD = async (body) =>{
         nuevoUsuario.idCarrito = nuevoCarrito._id
         nuevoUsuario.idFavoritos = nuevoFavoritos._id
 
-        await nuevoCarrito.save()
-        await nuevoFavoritos.save()
-        await nuevoUsuario.save()
 
-        return{
-            msg: "Usuario registrado con exito!",
-            statusCode: 201
+        const {info, rejected} = await registroExitoso(nuevoUsuario.emailUsuario, nuevoUsuario.nombreUsuario)
+        if(info && !rejected.length){
+            await nuevoCarrito.save()
+            await nuevoFavoritos.save()
+            await nuevoUsuario.save()
+            return{
+                msg: "Usuario registrado con exito",
+                statusCode: 201
+            }
+        }else{
+            return{
+                msg: "ERROR al intentar crear el usuario"
+            }
         }
+
     } catch (error) {
         return{
             error, 
@@ -91,21 +100,22 @@ const iniciarSesionUsuarioDB = async (body) => {
 const altaLogicaUsuarioPorIdBD = async (idUsuario) =>{
     
     try {
-        const usuario = await UsuariosModel.findOne({_id: idUsuario})
-         if (!usuario) {
+        const usuarioExiste = await UsuariosModel.findOne({_id: idUsuario})
+         if (!usuarioExiste) {
            return {
              msg: "Usuario no encontrado",
               statusCode: 404,
             };
          }
-        usuario.estado = "habilitado"
-        await usuario.save()
+        usuarioExiste.estado = "habilitado"
+        await usuarioExiste.save()
 
         return{
             msg:"Usuario habilitado",
             statusCode:200,         
         }
     } catch (error) {
+      console.log(error)
         return{
             error,
             statusCode: 500
@@ -116,15 +126,15 @@ const altaLogicaUsuarioPorIdBD = async (idUsuario) =>{
 const bajaLogicaUsuarioPorIdBD = async (idUsuario) =>{
     
     try {
-        const usuario = await UsuariosModel.findOne({_id: idUsuario})
-        if (!usuario) {
+        const usuarioExiste = await UsuariosModel.findOne({_id: idUsuario})
+        if (!usuarioExiste) {
            return {
              msg: "Usuario no encontrado",
               statusCode: 404,
             };
          }
-        usuario.estado = "deshabilitado"
-        await usuario.save()
+        usuarioExiste.estado = "deshabilitado"
+        await usuarioExiste.save()
 
         return{
             msg:"Usuario deshabilitado",
@@ -142,18 +152,18 @@ const bajaFisicaUsuarioPorIdBD = async (idUsuario) =>{
     
     try {
 
-        const usuario = await UsuariosModel.findOne({_id: idUsuario})
+        const usuarioExiste = await UsuariosModel.findOne({_id: idUsuario})
 
 
-        if(!usuario){
+        if(!usuarioExiste){
             return{
                 msg:"Usuario no encontrado",
                 statusCode: 404,
             }
         }
 
-         await CarritosModel.findByIdAndDelete(usuario.idCarrito);
-         await FavoritosModel.findByIdAndDelete(usuario.idFavoritos);
+         await CarritosModel.findByIdAndDelete(usuarioExiste.idCarrito);
+         await FavoritosModel.findByIdAndDelete(usuarioExiste.idFavoritos);
          await UsuariosModel.findByIdAndDelete({_id: idUsuario})
         
 
@@ -170,9 +180,88 @@ const bajaFisicaUsuarioPorIdBD = async (idUsuario) =>{
     }
 }
 
+const editarInfoUsuarioPorIdBD = async(idUsuario, body) =>{
+
+    try {
+
+       if (body.contrasenia) {
+        delete body.contrasenia;
+       }
+
+       const usuarioExiste = await UsuariosModel.findByIdAndUpdate(
+        {_id: idUsuario}, 
+        body, 
+      )
+
+       if(!usuarioExiste){
+        return{
+          msg:"Usuario no encontrado",
+          statusCode:404
+        } 
+        
+       }
+
+       return{
+        msg: "Usuario editado con exito",
+        statusCode: 200,
+       } 
+    } catch (error) {
+        return{
+            error,
+            statusCode: 500
+        }
+    }
+}
+
+const cambiarContraseniaUsuarioBD = async (idUsuario, body) => {
+
+try {
+  const usuarioExiste = await UsuariosModel.findById({_id: idUsuario })
+  if(!usuarioExiste){
+    return{
+      msg: "Usuario no encontrado",
+      statusCode: 404,
+    }
+  }
+
+  const esCorrecta = await argon.verify(usuarioExiste.contrasenia, body.actual)
+  if(!esCorrecta) {
+    return{
+      msg:"Contraseña actual incorrecta",
+      statusCode: 401,
+    }
+  }
+
+  const esIgual = await argon.verify(usuarioExiste.contrasenia, body.nueva)
+  if(esIgual){
+    return{
+      msg:"La nueva contraseña no puede ser igual a la actual!",
+      statusCode: 400,
+    }
+  }
+
+  usuarioExiste.contrasenia = await argon.hash(body.nueva)
+  await usuarioExiste.save()
+  return{
+    msg: "Contraseña actualizada con exito",
+    statusCode:200,
+  }
+} catch (error) {
+  console.log(error)
+  return{
+   error,
+   statusCode: 500
+  }
+  
+}
+}
+
+
 module.exports = {
     registrarUsuarioBD,
     iniciarSesionUsuarioDB,
+    editarInfoUsuarioPorIdBD,
+    cambiarContraseniaUsuarioBD,
     altaLogicaUsuarioPorIdBD,
     bajaLogicaUsuarioPorIdBD,
     bajaFisicaUsuarioPorIdBD,
