@@ -33,6 +33,7 @@ router.post(
     check("descripcion", "ERROR. El campo DESCRIPCION está vacío").notEmpty(),
   ],
   validarCampos,
+  auth("admin"),
   crearUnProducto
 );
 
@@ -45,6 +46,7 @@ router.put(
     ).isMongoId(),
   ],
   validarCampos,
+  auth("admin"),
   actualizarUnProducto
 );
 
@@ -57,6 +59,7 @@ router.delete(
     ).isMongoId(),
   ],
   validarCampos,
+  auth("admin"),
   borrarUnProducto
 );
 
