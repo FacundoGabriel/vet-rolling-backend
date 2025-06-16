@@ -1,5 +1,5 @@
 const { Router } = require("express");
-const { registrarUsuario, iniciarSesionUsuario, altaLogicaUsuarioPorId, bajaLogicaUsuarioPorId, bajaFisicaUsuarioPorId, editarInfoUsuarioPorId, cambiarContraseniaUsuario } = require("../controllers/usuarios.controllers");
+const { registrarUsuario, iniciarSesionUsuario, altaLogicaUsuarioPorId, bajaLogicaUsuarioPorId, bajaFisicaUsuarioPorId, editarInfoUsuarioPorId, cambiarContraseniaUsuario, obtenerTodosLosUsuarios } = require("../controllers/usuarios.controllers");
 const router = Router();
 const { check } = require("express-validator")
 const validarCampos = require("../middlewares/validarCampos");
@@ -43,6 +43,9 @@ router.put("/cambiar-contrasenia/:id", [
     check("actual", "Campo CONTRASEÑA vacio").notEmpty(),
     check("nueva", "ERROR. caracteres soportados solo entre 8 y 40").isLength({min:8},{max:40})
 ], validarCampos, auth("usuario"), cambiarContraseniaUsuario)
+
+ router.get('/admin', [
+ ], validarCampos, auth("admin"), obtenerTodosLosUsuarios)
 
 
 module.exports = router;
