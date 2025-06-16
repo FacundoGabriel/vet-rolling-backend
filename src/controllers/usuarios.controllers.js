@@ -5,7 +5,8 @@ const {
     bajaLogicaUsuarioPorIdBD, 
     bajaFisicaUsuarioPorIdBD, 
     editarInfoUsuarioPorIdBD,
-    cambiarContraseniaUsuarioBD
+    cambiarContraseniaUsuarioBD,
+    obtenerTodosLosUsuariosDB
 } = require("../services/usuarios.services")
 
 
@@ -72,6 +73,14 @@ const cambiarContraseniaUsuario = async (req, res) =>{
     }
 }
 
+const obtenerTodosLosUsuarios = async(req, res)=>{
+    const {usuarios, statusCode, error } = await obtenerTodosLosUsuariosDB()
+    try {
+        res.status(statusCode).json({usuarios})
+    } catch {
+        res.status(statusCode).json({error})
+    }
+}
 
 module.exports = {
     registrarUsuario,
@@ -81,6 +90,7 @@ module.exports = {
     bajaFisicaUsuarioPorId,
     editarInfoUsuarioPorId,
     cambiarContraseniaUsuario,
+    obtenerTodosLosUsuarios
   }
 
 
