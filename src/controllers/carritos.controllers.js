@@ -1,5 +1,6 @@
 const {
   obtenerProductosDelCarritoBD,
+  agregarProductoCarritoBD,
 } = require("../services/carritos.services");
 
 const obtenerProductosDelCarrito = async (req, res) => {
@@ -13,6 +14,19 @@ const obtenerProductosDelCarrito = async (req, res) => {
   }
 };
 
+const agregarProductoCarrito = async (req, res) => {
+  const { statusCode, msg, error } = await agregarProductoCarritoBD(
+    req.idCarrito,
+    req.params.idProducto
+  );
+  try {
+    res.status(statusCode).json({ msg });
+  } catch (error) {
+    res.status(statusCode).json({ error });
+  }
+};
+
 module.exports = {
   obtenerProductosDelCarrito,
+  agregarProductoCarrito,
 };

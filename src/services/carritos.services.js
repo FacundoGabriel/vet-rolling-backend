@@ -16,6 +16,35 @@ const obtenerProductosDelCarritoBD = async (idCarrito) => {
   }
 };
 
+const agregarProductoCarritoBD = async (idCarrito, idProducto) => {
+  try {
+    const carrito = await CarritosModel.findOne({ _id: idCarrito });
+    const producto = await ProductosModel.findOne({ _id: idProducto });
+
+    const productoExisteCarrito = carrito.productos.find(
+      (prod) => prod._id.toString() === idProducto.toString()
+    );
+    if (productoExisteCarrito) {
+      return {
+        msg: "ERROR. El producto ya existe en el carrito",
+        statusCode: 400,
+      };
+    }
+    carrito.productos.push(producto);
+    await carrito.save();
+    return {
+      msg: "El producto fue agregado correctamente",
+      statusCode: 200,
+    };
+  } catch (error) {
+    return {
+      error,
+      statusCode: 500,
+    };
+  }
+};
+
 module.exports = {
   obtenerProductosDelCarritoBD,
+  agregarProductoCarritoBD,
 };
