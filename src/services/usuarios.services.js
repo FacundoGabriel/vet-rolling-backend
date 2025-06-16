@@ -258,6 +258,21 @@ try {
 }
 }
 
+const obtenerTodosLosUsuariosDB = async()=>{
+    try {
+        const usuarios = await UsuariosModel.find().select('-contrasenia');
+        console.log(usuarios)
+        return{
+            usuarios,
+            statusCode: 200
+        }
+    } catch (error) {
+        return{
+            error,
+            statusCode: 500
+        }
+    }
+}
 
 module.exports = {
     registrarUsuarioBD,
@@ -267,5 +282,6 @@ module.exports = {
     altaLogicaUsuarioPorIdBD,
     bajaLogicaUsuarioPorIdBD,
     bajaFisicaUsuarioPorIdBD,
+    obtenerTodosLosUsuariosDB
   }
 
