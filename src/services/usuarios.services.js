@@ -71,6 +71,8 @@ const iniciarSesionUsuarioDB = async (body) => {
       const payload = {
         idUsuario: usuarioExiste._id,
         rolUsuario: usuarioExiste.rol,
+        idCarrito: usuarioExiste.idCarrito,
+        idFavoritos:usuarioExiste.idFavoritos
       };
 
 

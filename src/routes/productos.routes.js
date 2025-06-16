@@ -9,6 +9,8 @@ const {
 } = require("../controllers/productos.controllers");
 const { check } = require("express-validator");
 const router = Router();
+const auth = require("../middlewares/auth");
+
 
 router.get("/", obtenerTodosLosProductos);
 
