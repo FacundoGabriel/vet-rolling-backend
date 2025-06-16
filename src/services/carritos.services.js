@@ -44,7 +44,34 @@ const agregarProductoCarritoBD = async (idCarrito, idProducto) => {
   }
 };
 
+const eliminarProductoCarritoBD = async (idCarrito, idProducto) => {
+  try {
+    const carrito = await CarritosModel.findOne({ _id: idCarrito });
+    const productoIndex = carrito.productos.findIndex(
+      (prod) => prod._id.toString() === idProducto.toString()
+    );
+    if (productoIndex < 0) {
+      return {
+        msg: "ERROR. El producto que intenta eliminar no existe",
+        statusCode: 404,
+      };
+    }
+    carrito.productos.splice(productoIndex, 1);
+    await carrito.save();
+    return {
+      msg: "Producto eliminado del carrito correctamente",
+      statusCode: 200,
+    };
+  } catch (error) {
+    return {
+      error,
+      statusCode: 500,
+    };
+  }
+};
+
 module.exports = {
   obtenerProductosDelCarritoBD,
   agregarProductoCarritoBD,
+  eliminarProductoCarritoBD,
 };
