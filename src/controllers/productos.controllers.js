@@ -4,6 +4,7 @@ const {
   obtenerUnProductoPorIdBD,
   actualizarUnProductoBD,
   borrarUnProductoBD,
+  agregarImagenProductoArray,
 } = require("../services/productos.services");
 
 const crearUnProducto = async (req, res) => {
@@ -15,6 +16,11 @@ const crearUnProducto = async (req, res) => {
     res.status(statusCode).json({ error });
   }
 };
+
+const agregarImagenProducto = async (req,res) =>{
+    const {statusCode, mensaje} = await agregarImagenProductoArray(req.params.id, req.file)
+    res.status(statusCode).json(mensaje)
+}
 
 const obtenerTodosLosProductos = async (req, res) => {
   const { statusCode, productos, error } = await obtenerTodosLosProductosBD();
@@ -59,6 +65,7 @@ const borrarUnProducto = async (req, res) => {
 
 module.exports = {
   crearUnProducto,
+  agregarImagenProducto,
   obtenerTodosLosProductos,
   obtenerUnProductoPorId,
   actualizarUnProducto,

@@ -6,10 +6,12 @@ const {
   obtenerUnProductoPorId,
   actualizarUnProducto,
   borrarUnProducto,
+  agregarImagenProducto,
 } = require("../controllers/productos.controllers");
 const { check } = require("express-validator");
 const router = Router();
 const auth = require("../middlewares/auth");
+const multerMiddlewares = require("../middlewares/multer.middlewares");
 
 
 router.get("/", obtenerTodosLosProductos);
@@ -38,6 +40,10 @@ router.post(
   auth("admin"),
   crearUnProducto
 );
+
+ router.put("/agregarImagen/:id",
+     multerMiddlewares.single("imagen"), auth("admin"), agregarImagenProducto)
+
 
 router.put(
   "/:id",
