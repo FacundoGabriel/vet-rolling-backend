@@ -7,7 +7,7 @@ const obtenerTodosTusMascotasBD = async (idUsuario) => {
 
     if (!usuarioExiste) {
       return {
-        msg: "Usuario no encontrado",
+        msg: "No puedes ver las mascotas de un usuario que no existe",
         statusCode: 404,
       };
     }
