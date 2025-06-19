@@ -33,7 +33,7 @@ const UsuariosSchema = new Schema({
     },
     rol: {
         type:String,
-        enum:["usuario", "admin"],
+        enum:["usuario", "admin", "veterinario"],
         default:"usuario"
     },
     fechaReg:{
@@ -47,9 +47,23 @@ const UsuariosSchema = new Schema({
     idFavoritos:{
         type:String,
         trim:true,
-    }
+    },
+    mascotas: [{
+        type: Schema.Types.ObjectId,
+        ref: "Mascota"
+    }],
+
+    foto: {
+    type: String,
+    trim: true,
+    default: "url",
+  },
+    
+
+    
 }
 )
+
 
 UsuariosSchema.methods.toJSON= function(){
     const {contrasenia, ...usuario} = this.toObject()
