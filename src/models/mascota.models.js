@@ -38,6 +38,12 @@ const MascotaSchema = new mongoose.Schema({
     trim: true,
     default: "url",
   },
+  plan:{
+    type:String,
+    trim:true,
+    enum: ['Primeros pasos', 'Madurando', "Adultos", "Sin plan"],
+    default: "Sin plan"
+  }
 
   
   
