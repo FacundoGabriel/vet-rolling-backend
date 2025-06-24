@@ -18,8 +18,8 @@ const crearUnProducto = async (req, res) => {
 };
 
 const agregarImagenProducto = async (req,res) =>{
-    const {statusCode, mensaje} = await agregarImagenProductoArray(req.params.id, req.file)
-    res.status(statusCode).json(mensaje)
+    const {statusCode, msg} = await agregarImagenProductoArray(req.params.id, req.file)
+    res.status(statusCode).json({msg})
 }
 
 const obtenerTodosLosProductos = async (req, res) => {

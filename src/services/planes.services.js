@@ -1,6 +1,123 @@
 const MascotaModels = require("../models/mascota.models");
+const PlanModels = require("../models/plan.model");
 const PlanContratadoModel = require("../models/planContratado.model");
 const UsuariosModel = require("../models/usuarios.model");
+const cloudinary = require("../helpers/cloudinary.config.helpers")
+
+const crearPlanBD = async (body) => {
+  try {
+    const nuevoPlan = new PlanModels(body);
+    await nuevoPlan.save();
+
+    return {
+      msg: "Plan creado correctamente",
+      statusCode: 201
+    };
+  } catch (error) {
+    console.log(error)
+    return {
+      error,
+      statusCode: 500
+    };
+  }
+};
+const agregarImagenPlanArray = async (idPlan, file) => {
+    const plan = await PlanModels.findOne({_id: idPlan})
+    const imagen = await cloudinary.uploader.upload(file.path)
+    plan.imagen = imagen.secure_url
+    await plan.save()
+
+    return{
+        msg: "Imagen agregada al producto",
+        statusCode: 200,
+    }
+}
+
+const obtenerPlanesBD = async () => {
+  try {
+    const planes = await PlanModels.find();
+    
+    return {
+      planes,
+      statusCode: 200
+    };
+  } catch (error) {
+    return {
+      error,
+      statusCode: 500
+    };
+  }
+};
+const obtenerUnPlanBD = async (idPlan) => {
+  try {
+    const plan = await PlanModels.findOne({_id: idPlan});
+
+    if (!plan) {
+      return {
+        msg: "Plan no encontrado",
+        statusCode: 404
+      };
+    }
+
+    return {
+      plan,
+      statusCode: 200
+    };
+  } catch (error) {
+    return {
+      error,
+      statusCode: 500
+    };
+  }
+};
+
+const editarPlanBD = async (idPlan, body) => {
+  try {
+    const planActualizado = await PlanModel.findByIdAndUpdate(idPlan, body, {
+      new: true
+    });
+
+    if (!planActualizado) {
+      return {
+        msg: "Plan no encontrado para editar",
+        statusCode: 404
+      };
+    }
+
+    return {
+      msg: "Plan actualizado correctamente",
+      statusCode: 200
+    };
+  } catch (error) {
+    return {
+      error,
+      statusCode: 500
+    };
+  }
+};
+
+const eliminarPlanBD = async (idPlan) => {
+  try {
+    const planEliminado = await PlanModels.findByIdAndDelete(idPlan);
+
+    if (!planEliminado) {
+      return {
+        msg: "Plan no encontrado para eliminar",
+        statusCode: 404
+      };
+    }
+
+    return {
+      msg: "Plan eliminado correctamente",
+      statusCode: 200
+    };
+  } catch (error) {
+    return {
+      error,
+      statusCode: 500
+    };
+  }
+};
 
 const aniadirPlanBD = async (body, idUsuario) => {
   try {
@@ -147,6 +264,12 @@ const obtenerPlanesVeterinarioBD = async (idUsuario) => {
 
 
 module.exports = { 
+    crearPlanBD,
+    agregarImagenPlanArray,
+    obtenerPlanesBD,
+    obtenerUnPlanBD,
+    editarPlanBD,
+    eliminarPlanBD,
     aniadirPlanBD,
     cancelarPlanBD,
     cancelarPlanComoVeterinarioBD,
