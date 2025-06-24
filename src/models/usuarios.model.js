@@ -55,7 +55,6 @@ const UsuariosSchema = new Schema({
     default: "url",
   },
 
-  // NUEVAS PROPIEDADES PARA VETERINARIOS
   solicitoVeterinario: {
     type: Boolean,
     default: false

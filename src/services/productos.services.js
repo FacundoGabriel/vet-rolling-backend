@@ -61,7 +61,7 @@ const agregarImagenProductoArray = async (idProducto, file) => {
     await producto.save()
 
     return{
-        mensaje: "Imagen agregada al producto",
+        msg: "Imagen agregada al producto",
         statusCode: 200,
     }
 }

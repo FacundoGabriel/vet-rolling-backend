@@ -17,7 +17,7 @@ router.post("/registro",[
 
 router.get("/", obtenerVeterinarios)
 router.put("/aprobar-veterinario/:idUsuario", [
-    check("id", "ID incorrecto. Formato no corresponde a mongoose").isMongoId()
+    check("idUsuario", "ID incorrecto. Formato no corresponde a mongoose").isMongoId()
 ], validarCampos, auth("admin"), aprobarVeterinario);
 
 module.exports = router;

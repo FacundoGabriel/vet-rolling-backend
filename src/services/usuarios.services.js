@@ -35,6 +35,7 @@ const registrarUsuarioBD = async (body) =>{
         }
 
     } catch (error) {
+      console.log(error)
         return{
             error, 
             statusCode:500
