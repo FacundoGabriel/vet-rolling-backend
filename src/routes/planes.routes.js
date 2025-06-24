@@ -37,8 +37,7 @@ router.post("/aniadirPlan", [
     check("mascota", "Campo MASCOTA esta vacio").notEmpty(),
     check("veterinario", "Campo VETERINARIO esta vacio").notEmpty(),
     check("fecha", "Campo FECHA esta vacio").notEmpty(),
-    check("dia", "Campo DIA esta vacio").notEmpty(),
-    check("hora", "Campo HORA esta vacio").notEmpty(),
+    check("horario", "Campo HORA esta vacio").notEmpty(),
 ], validarCampos, auth("usuario"), aniadirPlan)
 router.delete("/cancelarPlan/:idMascota",[
     check("idMascota", "ID incorrecto. Formato no corresponde a mongoose").isMongoId()

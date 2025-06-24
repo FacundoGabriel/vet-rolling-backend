@@ -12,11 +12,7 @@ const PlanContratadoSchema = new mongoose.Schema({
     required: true
   },
   fecha: {
-    type: String, 
-    required: true
-  },
-  dia: {
-    type: String, 
+    type: Date, 
     required: true
   },
   horario: {

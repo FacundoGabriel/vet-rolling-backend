@@ -3,7 +3,7 @@ const { aniadirUnaMascotaBD, actualizarUnaMascotaBD, obtenerTodosTusMascotasBD, 
 const obtenerTodosTusMascotas = async (req,res) =>{
     const {mascotas, statusCode, error} = await obtenerTodosTusMascotasBD(req.idUsuario)
     try {
-        res.status(statusCode).json(mascotas)
+        res.status(statusCode).json({mascotas})
     } catch {
         res.status(statusCode).json(error)
     }
