@@ -18,6 +18,11 @@ router.put("/agregarImagen/:id",
 
 router.get("/", obtenerPlanes)
 router.get("/:idPlan",  [
+    check("nombre", "Campo NOMBRE esta vacio").notEmpty(),
+    check("descripcion", "Campo DESCRIPCION esta vacio").notEmpty(),
+    check("precio", "Campo PRECIO esta vacio").notEmpty(),
+    check("servicios", "Campo SERVICIOS vacio")
+    .isArray({ min: 1 }),
     check("idPlan", "ID incorrecto. Formato no corresponde a mongoose").isMongoId()
 ], validarCampos, obtenerUnPlan)
 router.put("/editarPlan/:idPlan", [
