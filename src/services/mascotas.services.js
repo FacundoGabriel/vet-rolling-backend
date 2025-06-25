@@ -1,9 +1,12 @@
-const MascotaModels = require("../models/mascota.models")
-const UsuariosModel = require("../models/usuarios.model")
+const MascotaModels = require("../models/mascota.models");
+const UsuariosModel = require("../models/usuarios.model");
+const cloudinary = require("../helpers/cloudinary.config.helpers");
 
 const obtenerTodosTusMascotasBD = async (idUsuario) => {
   try {
-    const usuarioExiste = await UsuariosModel.findById(idUsuario).populate("mascotas");
+    const usuarioExiste = await UsuariosModel.findById(idUsuario).populate(
+      "mascotas"
+    );
 
     if (!usuarioExiste) {
       return {
@@ -12,7 +15,6 @@ const obtenerTodosTusMascotasBD = async (idUsuario) => {
       };
     }
 
-    
     return {
       mascotas: usuarioExiste.mascotas,
       statusCode: 200,
@@ -25,62 +27,73 @@ const obtenerTodosTusMascotasBD = async (idUsuario) => {
     };
   }
 };
-const aniadirUnaMascotaBD = async (body, idUsuario) =>{
-    try {
-        const nuevaMascota = new MascotaModels(body)
-        const nuevoUsuario = await UsuariosModel.findOne({_id: idUsuario})
+const aniadirUnaMascotaBD = async (body, idUsuario) => {
+  try {
+    const nuevaMascota = new MascotaModels(body);
+    const nuevoUsuario = await UsuariosModel.findOne({ _id: idUsuario });
 
+    nuevaMascota.propietario = idUsuario;
 
-        nuevaMascota.propietario = idUsuario
+    await nuevaMascota.save();
 
-        
-        await nuevaMascota.save()
+    nuevoUsuario.mascotas.push(nuevaMascota._id);
 
-        nuevoUsuario.mascotas.push(nuevaMascota._id); 
-        
-        await nuevoUsuario.save()
+    await nuevoUsuario.save();
 
-        return{
-            msg: "Mascota añadida con exito",
-            statusCode:200
-        }
-        
-    } catch (error) {
-        console.log(error)
-        return{
-            error,
-            statusCode:500
-        }
+    return {
+      msg: "Mascota añadida con exito",
+      statusCode: 200,
+      idMascota: nuevaMascota._id,
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      error,
+      statusCode: 500,
+    };
+  }
+};
+
+const agregarImagenMascotaArray = async (idPlan, file) => {
+  const mascota = await MascotaModels.findOne({ _id: idPlan });
+  const imagen = await cloudinary.uploader.upload(file.path);
+  mascota.foto = imagen.secure_url;
+  await mascota.save();
+
+  return {
+    msg: "Imagen agregada a la mascota",
+    statusCode: 200,
+  };
+};
+const actualizarUnaMascotaBD = async (idMascota, body) => {
+  try {
+    const mascota = await MascotaModels.findByIdAndUpdate(
+      { _id: idMascota },
+      body
+    );
+    if (!mascota) {
+      return {
+        msg: "Mascota no encontrada",
+        statusCode: 404,
+      };
     }
-}
-const actualizarUnaMascotaBD = async (idMascota, body) =>{
-    
-    try {
-        const mascota =  await MascotaModels.findByIdAndUpdate({_id: idMascota}, body)
-        if(!mascota){
-            return{
-                msg: "Mascota no encontrada",
-                statusCode:404
-            }
-        }
 
-        
-        return{
-            msg:"Mascota Editada con exito",
-            statusCode:200,
-        }
-    } catch (error) {
-        console.log(error)
-        return{
-            error,
-            statusCode: 500
-        }
-    }
-}
+    return {
+      msg: "Mascota Editada con exito",
+      statusCode: 200,
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      error,
+      statusCode: 500,
+    };
+  }
+};
 
 const eliminarUnaMascotaBD = async (idMascota, idUsuario) => {
   try {
-    const mascotaExiste = await MascotaModels.findOne({_id: idMascota});
+    const mascotaExiste = await MascotaModels.findOne({ _id: idMascota });
 
     if (!mascotaExiste) {
       return {
@@ -89,7 +102,6 @@ const eliminarUnaMascotaBD = async (idMascota, idUsuario) => {
       };
     }
 
-    
     if (mascotaExiste.propietario.toString() !== idUsuario) {
       return {
         msg: "No tenés permiso para eliminar esta mascota.",
@@ -97,18 +109,16 @@ const eliminarUnaMascotaBD = async (idMascota, idUsuario) => {
       };
     }
 
-   
     await MascotaModels.findByIdAndDelete(idMascota);
 
     await UsuariosModel.findByIdAndUpdate(idUsuario, {
-      $pull: { mascotas: idMascota }
+      $pull: { mascotas: idMascota },
     });
 
     return {
       msg: "Mascota eliminada con éxito.",
       statusCode: 200,
     };
-
   } catch (error) {
     console.error(error);
     return {
@@ -118,12 +128,10 @@ const eliminarUnaMascotaBD = async (idMascota, idUsuario) => {
   }
 };
 
-
-
 module.exports = {
-     obtenerTodosTusMascotasBD,
-     aniadirUnaMascotaBD,
-     actualizarUnaMascotaBD,
-     eliminarUnaMascotaBD
-     
-    }
+  obtenerTodosTusMascotasBD,
+  aniadirUnaMascotaBD,
+  agregarImagenMascotaArray,
+  actualizarUnaMascotaBD,
+  eliminarUnaMascotaBD,
+};
