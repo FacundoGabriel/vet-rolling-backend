@@ -105,8 +105,44 @@ const aprobarVeterinarioBD = async (idUsuario) => {
   }
 };
 
+const deshabilitarVeterinarioBD = async (idUsuario) => {
+  try {
+    const usuario = await UsuariosModel.findById(idUsuario);
+
+    if (!usuario) {
+      return {
+        msg: "Usuario no encontrado",
+        statusCode: 404,
+      };
+    }
+
+    if (!usuario.solicitoVeterinario) {
+      return {
+        msg: "Este usuario no solicitó ser veterinario",
+        statusCode: 400,
+      };
+    }
+
+    usuario.estado = "deshabilitado";
+    usuario.rol = "usuario";
+
+    await usuario.save();
+
+    return {
+      msg: "Veterinario deshabilitado correctamente",
+      statusCode: 200,
+    };
+  } catch (error) {
+    return {
+      error,
+      statusCode: 500,
+    };
+  }
+};
+
 module.exports = {
   registrarVeterinarioBD,
   obtenerVeterinariosBD,
   aprobarVeterinarioBD,
+  deshabilitarVeterinarioBD,
 };
