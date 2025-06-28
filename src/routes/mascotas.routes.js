@@ -44,7 +44,7 @@ router.put(
       "ERROR. ID incorrecto. El formato no corresponde a mongoose"
     ).isMongoId(),
   ],
-  auth("usuario"),
+  auth(["usuario", "admin", "veterinario"]),
   validarCampos,
   actualizarUnaMascota
 );
