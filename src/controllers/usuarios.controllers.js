@@ -22,11 +22,10 @@ const registrarUsuario = async (req, res) => {
 };
 
 const iniciarSesionUsuario = async (req, res) => {
-  const { msg, statusCode, token, error } = await iniciarSesionUsuarioDB(
-    req.body
-  );
+  const { msg, statusCode, token, error, idUsuario } =
+    await iniciarSesionUsuarioDB(req.body);
   try {
-    res.status(statusCode).json({ msg, statusCode, token });
+    res.status(statusCode).json({ msg, idUsuario, statusCode, token });
   } catch {
     res.status(statusCode).json(error);
   }
