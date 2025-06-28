@@ -101,10 +101,8 @@ router.put(
 router.get("/admin", [], validarCampos, auth("admin"), obtenerTodosLosUsuarios);
 router.get(
   "/:id",
-  [
-    check("id", "ID incorrecto. Formato no corresponde a mongoose").isMongoId(),
-    auth("usuario"),
-  ],
+  [check("id", "ID incorrecto. Formato no corresponde a mongoose").isMongoId()],
+  auth(["usuario", "admin", "veterinario"]),
   obtenerUnUsuarioPorId
 );
 
