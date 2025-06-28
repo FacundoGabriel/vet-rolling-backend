@@ -13,7 +13,6 @@ const router = Router();
 const auth = require("../middlewares/auth");
 const multerMiddlewares = require("../middlewares/multer.middlewares");
 
-
 router.get("/", obtenerTodosLosProductos);
 
 router.get(
@@ -41,9 +40,12 @@ router.post(
   crearUnProducto
 );
 
- router.put("/agregarImagen/:id",
-     multerMiddlewares.single("imagen"), auth("admin"), agregarImagenProducto)
-
+router.put(
+  "/agregarImagen/:id",
+  multerMiddlewares.single("imagen"),
+  auth("admin"),
+  agregarImagenProducto
+);
 
 router.put(
   "/:id",

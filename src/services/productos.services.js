@@ -1,5 +1,5 @@
 const ProductosModel = require("../models/productos.model");
-const cloudinary = require("../helpers/cloudinary.config.helpers")
+const cloudinary = require("../helpers/cloudinary.config.helpers");
 
 const obtenerTodosLosProductosBD = async () => {
   try {
@@ -55,16 +55,16 @@ const crearUnProductoBD = async (body) => {
 };
 
 const agregarImagenProductoArray = async (idProducto, file) => {
-    const producto = await ProductosModel.findOne({_id: idProducto})
-    const imagen = await cloudinary.uploader.upload(file.path)
-    producto.imagen = imagen.secure_url
-    await producto.save()
+  const producto = await ProductosModel.findOne({ _id: idProducto });
+  const imagen = await cloudinary.uploader.upload(file.path);
+  producto.imagen = imagen.secure_url;
+  await producto.save();
 
-    return{
-        mensaje: "Imagen agregada al producto",
-        statusCode: 200,
-    }
-}
+  return {
+    mensaje: "Imagen agregada al producto",
+    statusCode: 200,
+  };
+};
 
 const actualizarUnProductoBD = async (idProducto, body) => {
   try {
