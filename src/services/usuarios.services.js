@@ -86,6 +86,7 @@ const iniciarSesionUsuarioDB = async (body) => {
       return {
         msg: "Usuario logueado correctamente",
         idUsuario: usuarioExiste._id,
+        rolUsuario: usuarioExiste.rol,
         token,
         statusCode: 200,
       };
