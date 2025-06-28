@@ -37,10 +37,6 @@ const registrarUsuarioBD = async (body) => {
       };
     }
   } catch (error) {
-
-    return {
-      error: error.message,
-
     console.log(error);
     return {
       error,
@@ -152,7 +148,6 @@ const bajaLogicaUsuarioPorIdBD = async (idUsuario) => {
     usuarioExiste.estado = "deshabilitado";
     await usuarioExiste.save();
 
-
     return {
       msg: "Usuario deshabilitado",
       statusCode: 200,
@@ -164,21 +159,6 @@ const bajaLogicaUsuarioPorIdBD = async (idUsuario) => {
     };
   }
 };
-
-
-
-    return {
-      msg: "Usuario deshabilitado",
-      statusCode: 200,
-    };
-  } catch (error) {
-    return {
-      error,
-      statusCode: 500,
-    };
-  }
-};
-
 
 const bajaFisicaUsuarioPorIdBD = async (idUsuario) => {
   try {
@@ -200,7 +180,6 @@ const bajaFisicaUsuarioPorIdBD = async (idUsuario) => {
       statusCode: 200,
     };
   } catch (error) {
-    
     return {
       error,
       statusCode: 500,
@@ -231,7 +210,6 @@ const editarInfoUsuarioPorIdBD = async (idUsuario, body) => {
       statusCode: 200,
     };
   } catch (error) {
-
     return {
       error,
       statusCode: 500,
@@ -275,7 +253,6 @@ const cambiarContraseniaUsuarioBD = async (idUsuario, body) => {
       statusCode: 200,
     };
   } catch (error) {
-   
     return {
       error,
       statusCode: 500,
@@ -283,19 +260,10 @@ const cambiarContraseniaUsuarioBD = async (idUsuario, body) => {
   }
 };
 
-
 const obtenerTodosLosUsuariosDB = async () => {
   try {
     const usuarios = await UsuariosModel.find().select("-contrasenia");
-    
-    return {
-      usuarios,
 
-
-const obtenerTodosLosUsuariosDB = async () => {
-  try {
-    const usuarios = await UsuariosModel.find().select("-contrasenia");
-   
     return {
       usuarios,
       statusCode: 200,
@@ -313,7 +281,6 @@ const obtenerUnUsuarioPorIdBD = async (idUsuario) => {
     const usuario = await UsuariosModel.findOne({ _id: idUsuario });
     return {
       usuario,
-
       statusCode: 200,
     };
   } catch (error) {
@@ -327,17 +294,12 @@ const obtenerUnUsuarioPorIdBD = async (idUsuario) => {
 module.exports = {
   registrarUsuarioBD,
   iniciarSesionUsuarioDB,
-
-
   agregarImagenUsuarioArray,
-
   editarInfoUsuarioPorIdBD,
   cambiarContraseniaUsuarioBD,
   altaLogicaUsuarioPorIdBD,
   bajaLogicaUsuarioPorIdBD,
   bajaFisicaUsuarioPorIdBD,
   obtenerTodosLosUsuariosDB,
-
   obtenerUnUsuarioPorIdBD,
-
 };
