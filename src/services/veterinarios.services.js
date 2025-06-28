@@ -1,22 +1,18 @@
 const CarritosModel = require("../models/carritos.model");
 const FavoritosModel = require("../models/favoritos.model");
 const UsuariosModel = require("../models/usuarios.model");
-const { cuentaHabilitadaVeterinario } = require("../utils/mensajes.nodemailer.utils");
-const argon = require("argon2")
-
+const {
+  cuentaHabilitadaVeterinario,
+} = require("../utils/mensajes.nodemailer.utils");
+const argon = require("argon2");
 
 const registrarVeterinarioBD = async (body) => {
   try {
-    const {
-      contrasenia,
-      especialidad,
-      descripcion,
-      ...resto
-    } = body;
+    const { contrasenia, especialidad, descripcion, ...resto } = body;
 
     const nuevoUsuario = new UsuariosModel({
       ...resto,
-      rol: "usuario", 
+      rol: "usuario",
       estado: "deshabilitado",
       solicitoVeterinario: true,
       especialidad,
@@ -36,13 +32,13 @@ const registrarVeterinarioBD = async (body) => {
 
     return {
       msg: "Registro enviado. Esperá a que el administrador habilite tu cuenta.",
-      statusCode: 201
+      statusCode: 201,
     };
   } catch (error) {
     console.log(error);
     return {
       error,
-      statusCode: 500
+      statusCode: 500,
     };
   }
 };
@@ -51,17 +47,19 @@ const obtenerVeterinariosBD = async () => {
   try {
     const veterinarios = await UsuariosModel.find({
       rol: "veterinario",
-      estado: "habilitado"
-    }).select("nombreUsuario telefono descripcion especialidad"); 
+      estado: "habilitado",
+    }).select(
+      "nombreUsuario telefono descripcion especialidad foto emailUsuario"
+    );
 
     return {
       veterinarios,
-      statusCode: 200
+      statusCode: 200,
     };
   } catch (error) {
     return {
       error,
-      statusCode: 500
+      statusCode: 500,
     };
   }
 };
@@ -73,14 +71,14 @@ const aprobarVeterinarioBD = async (idUsuario) => {
     if (!usuario) {
       return {
         msg: "Usuario no encontrado",
-        statusCode: 404
+        statusCode: 404,
       };
     }
 
     if (!usuario.solicitoVeterinario) {
       return {
         msg: "Este usuario no solicitó ser veterinario",
-        statusCode: 400
+        statusCode: 400,
       };
     }
 
@@ -89,24 +87,62 @@ const aprobarVeterinarioBD = async (idUsuario) => {
 
     await usuario.save();
 
-    await cuentaHabilitadaVeterinario(usuario.emailUsuario, usuario.nombreUsuario);
+    await cuentaHabilitadaVeterinario(
+      usuario.emailUsuario,
+      usuario.nombreUsuario
+    );
 
     return {
       msg: "Veterinario aprobado correctamente y correo enviado",
-      statusCode: 200
+      statusCode: 200,
     };
-
   } catch (error) {
     console.log(error);
     return {
       error,
-      statusCode: 500
+      statusCode: 500,
     };
   }
 };
 
-module.exports={
-registrarVeterinarioBD,
-obtenerVeterinariosBD,
-aprobarVeterinarioBD,
-}
+const deshabilitarVeterinarioBD = async (idUsuario) => {
+  try {
+    const usuario = await UsuariosModel.findById(idUsuario);
+
+    if (!usuario) {
+      return {
+        msg: "Usuario no encontrado",
+        statusCode: 404,
+      };
+    }
+
+    if (!usuario.solicitoVeterinario) {
+      return {
+        msg: "Este usuario no solicitó ser veterinario",
+        statusCode: 400,
+      };
+    }
+
+    usuario.estado = "deshabilitado";
+    usuario.rol = "usuario";
+
+    await usuario.save();
+
+    return {
+      msg: "Veterinario deshabilitado correctamente",
+      statusCode: 200,
+    };
+  } catch (error) {
+    return {
+      error,
+      statusCode: 500,
+    };
+  }
+};
+
+module.exports = {
+  registrarVeterinarioBD,
+  obtenerVeterinariosBD,
+  aprobarVeterinarioBD,
+  deshabilitarVeterinarioBD,
+};

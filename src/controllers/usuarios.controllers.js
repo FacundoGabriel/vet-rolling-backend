@@ -7,6 +7,8 @@ const {
   editarInfoUsuarioPorIdBD,
   cambiarContraseniaUsuarioBD,
   obtenerTodosLosUsuariosDB,
+  obtenerUnUsuarioPorIdBD,
+  agregarImagenUsuarioArray,
 } = require("../services/usuarios.services");
 
 const registrarUsuario = async (req, res) => {
@@ -20,15 +22,31 @@ const registrarUsuario = async (req, res) => {
 };
 
 const iniciarSesionUsuario = async (req, res) => {
+
   const { msg, statusCode, token, error } = await iniciarSesionUsuarioDB(
     req.body
   );
   try {
     res.status(statusCode).json({ msg, statusCode, token });
+
+  const { msg, statusCode, token, error, idUsuario } =
+    await iniciarSesionUsuarioDB(req.body);
+  try {
+    res.status(statusCode).json({ msg, idUsuario, statusCode, token });
+
   } catch {
     res.status(statusCode).json(error);
   }
 };
+
+const agregarImagenUsuario = async (req, res) => {
+  const { statusCode, msg } = await agregarImagenUsuarioArray(
+    req.params.id,
+    req.file
+  );
+  res.status(statusCode).json({ msg });
+};
+
 
 const altaLogicaUsuarioPorId = async (req, res) => {
   const { msg, statusCode, error } = await altaLogicaUsuarioPorIdBD(
@@ -94,13 +112,32 @@ const obtenerTodosLosUsuarios = async (req, res) => {
   }
 };
 
+const obtenerUnUsuarioPorId = async (req, res) => {
+  const { usuario, msg, statusCode, error } = await obtenerUnUsuarioPorIdBD(
+    req.params.id,
+    req
+  );
+  try {
+    res.status(statusCode).json(msg ? { msg } : { usuario });
+  } catch {
+    res.status(statusCode).json({ error });
+  }
+};
+
+
 module.exports = {
   registrarUsuario,
   iniciarSesionUsuario,
+
+  agregarImagenUsuario,
+
   altaLogicaUsuarioPorId,
   bajaLogicaUsuarioPorId,
   bajaFisicaUsuarioPorId,
   editarInfoUsuarioPorId,
   cambiarContraseniaUsuario,
   obtenerTodosLosUsuarios,
+
+  obtenerUnUsuarioPorId,
+
 };

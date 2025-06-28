@@ -60,11 +60,19 @@ const agregarImagenProductoArray = async (idProducto, file) => {
   producto.imagen = imagen.secure_url;
   await producto.save();
 
+
   return {
     mensaje: "Imagen agregada al producto",
     statusCode: 200,
   };
 };
+
+    return{
+        msg: "Imagen agregada al producto",
+        statusCode: 200,
+    }
+}
+
 
 const actualizarUnProductoBD = async (idProducto, body) => {
   try {
