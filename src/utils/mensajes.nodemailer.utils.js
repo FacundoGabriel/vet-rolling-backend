@@ -28,10 +28,6 @@ const registroExitoso = async (userEmail, nameUser) => {
     `,
   });
 
-  
-
-
-
   console.log(info);
 
   return {
@@ -69,9 +65,30 @@ const cuentaHabilitadaVeterinario = async (userEmail, nameUser) => {
   });
 
   return info;
-}
+};
+
+const recuperarContrasenia = async (userEmail, token) => {
+  await transporter.sendMail({
+    from: `"Rolling vet" <${process.env.GMAIL_USER}>`,
+    to: `${userEmail}`,
+    subject: `Recuperá el acceso a tu cuenta en Rolling vet`,
+    text: "Hacé clic en el enlace para recuperar tu contraseña.",
+    html: `
+      <div style="font-family: Arial, sans-serif; text-align: center; padding: 20px;">
+        <img src="https://i.imgur.com/petRecovery.gif" alt="Recuperar acceso" style="max-width: 100%; height: auto;">
+        <h2>¡Hola! Sabemos que a veces se nos olvidan las cosas...</h2>
+        <p>Hacé clic en el botón de abajo para recuperar el acceso a tu cuenta y seguir cuidando a tus mascotas 🐾</p>
+        <a href="${process.env.FRONT_URL}/olvide-contraseña?token=${token}" 
+           style="display: inline-block; margin-top: 20px; padding: 10px 20px; background-color: #4CAF50; 
+           color: white; text-decoration: none; border-radius: 5px;">Recuperar Contraseña</a>
+        <p style="margin-top: 20px; color: #777;">Si no solicitaste este correo, podés ignorarlo.</p>
+      </div>
+    `,
+  });
+};
 
 module.exports = {
   registroExitoso,
-  cuentaHabilitadaVeterinario
+  cuentaHabilitadaVeterinario,
+  recuperarContrasenia,
 };

@@ -3,7 +3,10 @@ const CarritosModel = require("../models/carritos.model");
 const FavoritosModel = require("../models/favoritos.model");
 const argon = require("argon2");
 const jwt = require("jsonwebtoken");
-const { registroExitoso } = require("../utils/mensajes.nodemailer.utils");
+const {
+  registroExitoso,
+  recuperarContrasenia,
+} = require("../utils/mensajes.nodemailer.utils");
 const cloudinary = require("../helpers/cloudinary.config.helpers");
 
 const registrarUsuarioBD = async (body) => {
@@ -291,6 +294,66 @@ const obtenerUnUsuarioPorIdBD = async (idUsuario) => {
   }
 };
 
+const recuperarContraseniaUsuarioBD = async (emailUsuario) => {
+  try {
+    const usuarioExiste = await UsuariosModel.findOne({ emailUsuario });
+
+    if (!usuarioExiste) {
+      return {
+        msg: "ERR: Hubo un problema al intentar obtener el email solicitado",
+        statusCode: 404,
+      };
+    }
+
+    const payloadRecovery = {
+      idUsuario: usuarioExiste._id,
+    };
+
+    const tokenRecoveryPass = jwt.sign(payloadRecovery, process.env.JWT_SECRET);
+
+    await recuperarContrasenia(emailUsuario, tokenRecoveryPass);
+
+    return {
+      msg: "envio de correo exitoso",
+      statusCode: 200,
+    };
+  } catch (error) {
+    return {
+      error,
+    };
+  }
+};
+const cambiarContraseniaRecuperacionBD = async (token, nuevaContrasenia) => {
+  try {
+    const verificarUsuario = jwt.verify(token, process.env.JWT_SECRET);
+
+    if (!verificarUsuario) {
+      return {
+        msg: "Error al leer el token",
+        statusCode: 400,
+      };
+    }
+    const usuario = await UsuariosModel.findOne({
+      _id: verificarUsuario.idUsuario,
+    });
+
+    const nuevaContraseniaHash = await argon.hash(nuevaContrasenia);
+    usuario.contrasenia = nuevaContraseniaHash;
+
+    await usuario.save();
+
+    return {
+      msg: "La contraseña se actualizo con exito",
+      statusCode: 200,
+    };
+  } catch (error) {
+    return {
+      error,
+      statusCode: 500,
+    };
+  }
+};
+
 module.exports = {
   registrarUsuarioBD,
   iniciarSesionUsuarioDB,
@@ -302,4 +365,6 @@ module.exports = {
   bajaFisicaUsuarioPorIdBD,
   obtenerTodosLosUsuariosDB,
   obtenerUnUsuarioPorIdBD,
+  recuperarContraseniaUsuarioBD,
+  cambiarContraseniaRecuperacionBD,
 };
