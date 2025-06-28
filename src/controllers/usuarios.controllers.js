@@ -9,6 +9,8 @@ const {
   obtenerTodosLosUsuariosDB,
   obtenerUnUsuarioPorIdBD,
   agregarImagenUsuarioArray,
+  cambiarContraseniaRecuperacionBD,
+  recuperarContraseniaUsuarioBD,
 } = require("../services/usuarios.services");
 
 const registrarUsuario = async (req, res) => {
@@ -115,6 +117,31 @@ const obtenerUnUsuarioPorId = async (req, res) => {
   }
 };
 
+const recuperarContraseniaUsuario = async (req, res) => {
+  const { msg, statusCode, error } = await recuperarContraseniaUsuarioBD(
+    req.body.emailUsuario
+  );
+  try {
+    res.status(statusCode).json({ msg });
+  } catch {
+    res.status(statusCode).json({ error });
+  }
+};
+
+const cambiarContraseniaRecuperacion = async (req, res) => {
+  const token = req.header("authRecovery");
+
+  const { msg, statusCode, error } = await cambiarContraseniaRecuperacionBD(
+    token,
+    req.body.nuevaContrasenia
+  );
+  try {
+    res.status(statusCode).json({ msg });
+  } catch {
+    res.status(statusCode).json({ error });
+  }
+};
+
 module.exports = {
   registrarUsuario,
   iniciarSesionUsuario,
@@ -126,4 +153,6 @@ module.exports = {
   cambiarContraseniaUsuario,
   obtenerTodosLosUsuarios,
   obtenerUnUsuarioPorId,
+  recuperarContraseniaUsuario,
+  cambiarContraseniaRecuperacion,
 };

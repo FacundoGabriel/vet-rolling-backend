@@ -10,6 +10,8 @@ const {
   obtenerTodosLosUsuarios,
   obtenerUnUsuarioPorId,
   agregarImagenUsuario,
+  recuperarContraseniaUsuario,
+  cambiarContraseniaRecuperacion,
 } = require("../controllers/usuarios.controllers");
 const router = Router();
 const { check } = require("express-validator");
@@ -71,7 +73,7 @@ router.delete(
 );
 
 router.put(
-  "/:id",
+  "/editar-usuario/:id",
   [
     check("id", "ID incorrecto. Formato no corresponde a mongoose").isMongoId(),
     check("nombreUsuario", "Campo USUARIO esta vacio").notEmpty(),
@@ -105,5 +107,8 @@ router.get(
   auth(["usuario", "admin", "veterinario"]),
   obtenerUnUsuarioPorId
 );
+
+router.post("/recoveryPass", recuperarContraseniaUsuario);
+router.put("/changePassUser", cambiarContraseniaRecuperacion);
 
 module.exports = router;
