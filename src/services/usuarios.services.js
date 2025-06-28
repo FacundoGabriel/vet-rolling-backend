@@ -54,10 +54,10 @@ const iniciarSesionUsuarioDB = async (body) => {
       emailUsuario: body.emailUsuario,
     });
 
-    if (!usuarioExiste) {
+    if (usuarioExiste.estado !== "habilitado") {
       return {
-        msg: "ERROR. El usuario y/o contraseña incorrectas.",
-        statusCode: 401,
+        msg: "ERROR. Su cuenta está deshabilitada",
+        statusCode: 403,
       };
     }
 
