@@ -6,10 +6,12 @@ const {
 } = require("../services/veterinarios.services");
 
 const registrarVeterinario = async (req, res) => {
-  const { msg, statusCode, error } = await registrarVeterinarioBD(req.body);
+  const { msg, statusCode, error, idUsuario } = await registrarVeterinarioBD(
+    req.body
+  );
 
   try {
-    res.status(statusCode).json({ msg, statusCode });
+    res.status(statusCode).json({ msg, statusCode, idUsuario });
   } catch {
     res.status(statusCode).json(error);
   }

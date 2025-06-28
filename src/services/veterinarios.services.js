@@ -32,6 +32,7 @@ const registrarVeterinarioBD = async (body) => {
 
     return {
       msg: "Registro enviado. Esperá a que el administrador habilite tu cuenta.",
+      idUsuario: nuevoUsuario._id,
       statusCode: 201,
     };
   } catch (error) {

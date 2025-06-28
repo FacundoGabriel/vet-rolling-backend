@@ -79,7 +79,7 @@ router.put(
     check("telefono", "Campo TELEFONO vacio").notEmpty(),
   ],
   validarCampos,
-  auth("usuario"),
+  auth(["usuario", "admin", "veterinario"]),
   editarInfoUsuarioPorId
 );
 
@@ -94,7 +94,7 @@ router.put(
     ),
   ],
   validarCampos,
-  auth("usuario"),
+  auth(["usuario", "admin", "veterinario"]),
   cambiarContraseniaUsuario
 );
 
