@@ -9,11 +9,13 @@ const {
   cambiarContraseniaUsuario,
   obtenerTodosLosUsuarios,
   obtenerUnUsuarioPorId,
+  agregarImagenUsuario,
 } = require("../controllers/usuarios.controllers");
 const router = Router();
 const { check } = require("express-validator");
 const validarCampos = require("../middlewares/validarCampos");
 const auth = require("../middlewares/auth");
+const multerMiddlewares = require("../middlewares/multer.middlewares");
 
 router.post(
   "/registro",
@@ -44,7 +46,11 @@ router.post(
   validarCampos,
   iniciarSesionUsuario
 );
-
+router.put(
+  "/agregarImagen/:id",
+  multerMiddlewares.single("foto"),
+  agregarImagenUsuario
+);
 router.put(
   "/habilitar/:id",
   [check("id", "ID incorrecto. Formato no corresponde a mongoose").isMongoId()],

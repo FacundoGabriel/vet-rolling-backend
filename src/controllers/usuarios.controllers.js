@@ -8,6 +8,7 @@ const {
   cambiarContraseniaUsuarioBD,
   obtenerTodosLosUsuariosDB,
   obtenerUnUsuarioPorIdBD,
+  agregarImagenUsuarioArray,
 } = require("../services/usuarios.services");
 
 const registrarUsuario = async (req, res) => {
@@ -29,6 +30,13 @@ const iniciarSesionUsuario = async (req, res) => {
   } catch {
     res.status(statusCode).json(error);
   }
+};
+const agregarImagenUsuario = async (req, res) => {
+  const { statusCode, msg } = await agregarImagenUsuarioArray(
+    req.params.id,
+    req.file
+  );
+  res.status(statusCode).json({ msg });
 };
 
 const altaLogicaUsuarioPorId = async (req, res) => {
@@ -109,6 +117,7 @@ const obtenerUnUsuarioPorId = async (req, res) => {
 module.exports = {
   registrarUsuario,
   iniciarSesionUsuario,
+  agregarImagenUsuario,
   altaLogicaUsuarioPorId,
   bajaLogicaUsuarioPorId,
   bajaFisicaUsuarioPorId,
