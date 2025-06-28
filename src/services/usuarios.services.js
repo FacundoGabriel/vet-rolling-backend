@@ -4,6 +4,7 @@ const FavoritosModel = require("../models/favoritos.model");
 const argon = require("argon2");
 const jwt = require("jsonwebtoken");
 const { registroExitoso } = require("../utils/mensajes.nodemailer.utils");
+const cloudinary = require("../helpers/cloudinary.config.helpers");
 
 const registrarUsuarioBD = async (body) => {
   try {
@@ -25,6 +26,7 @@ const registrarUsuarioBD = async (body) => {
       await nuevoUsuario.save();
       return {
         msg: "Usuario registrado con exito",
+        idUsuario: nuevoUsuario._id,
         statusCode: 201,
       };
     } else {
@@ -92,6 +94,17 @@ const iniciarSesionUsuarioDB = async (body) => {
       statusCode: 500,
     };
   }
+};
+const agregarImagenUsuarioArray = async (idPlan, file) => {
+  const usuario = await UsuariosModel.findOne({ _id: idPlan });
+  const imagen = await cloudinary.uploader.upload(file.path);
+  usuario.foto = imagen.secure_url;
+  await usuario.save();
+
+  return {
+    msg: "Imagen agregada al usuario",
+    statusCode: 200,
+  };
 };
 
 const altaLogicaUsuarioPorIdBD = async (idUsuario) => {
@@ -194,6 +207,7 @@ const editarInfoUsuarioPorIdBD = async (idUsuario, body) => {
       statusCode: 200,
     };
   } catch (error) {
+    console.log(error);
     return {
       error,
       statusCode: 500,
@@ -279,6 +293,7 @@ const obtenerUnUsuarioPorIdBD = async (idUsuario) => {
 module.exports = {
   registrarUsuarioBD,
   iniciarSesionUsuarioDB,
+  agregarImagenUsuarioArray,
   editarInfoUsuarioPorIdBD,
   cambiarContraseniaUsuarioBD,
   altaLogicaUsuarioPorIdBD,
