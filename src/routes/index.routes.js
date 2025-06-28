@@ -9,6 +9,7 @@ const favoritosRoutes = require("./favoritos.routes");
 const mascotasRoutes = require("./mascotas.routes");
 const planesRoutes = require("./planes.routes");
 const veterinariosRoutes = require("./veterinarios.routes");
+const turnosRoutes = require("./turnos.routes");
 
 router.use("/carritos", carritosRoutes);
 router.use("/favoritos", favoritosRoutes);
@@ -18,5 +19,6 @@ router.use("/servicios", serviciosRoutes);
 router.use("/mascotas", mascotasRoutes);
 router.use("/planes", planesRoutes);
 router.use("/veterinarios", veterinariosRoutes);
+router.use("/turnos", turnosRoutes);
 
 module.exports = router;
