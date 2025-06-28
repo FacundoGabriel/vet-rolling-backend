@@ -12,10 +12,14 @@ const { check } = require("express-validator");
 const validarCampos = require("../middlewares/validarCampos");
 const multerMiddlewares = require("../middlewares/multer.middlewares");
 
-router.get("/tus-mascotas", auth("usuario"), obtenerTodosTusMascotas);
+router.get(
+  "/tus-mascotas",
+  auth(["usuario", "admin", "veterinario"]),
+  obtenerTodosTusMascotas
+);
 router.post(
   "/aniadirMascota",
-  auth("usuario"),
+  auth(["usuario", "admin", "veterinario"]),
   [
     check("nombre", "Campo NOMBRE esta vacio").notEmpty(),
     check("raza", "Campo RAZA esta vacio").notEmpty(),

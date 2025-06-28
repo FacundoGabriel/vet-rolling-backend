@@ -86,7 +86,7 @@ router.post(
     check("horario", "Campo HORA esta vacio").notEmpty(),
   ],
   validarCampos,
-  auth("usuario"),
+  auth(["usuario", "admin", "veterinario"]),
   aniadirPlan
 );
 router.delete(
