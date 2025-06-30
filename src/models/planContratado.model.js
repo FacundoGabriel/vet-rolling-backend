@@ -4,41 +4,36 @@ const PlanContratadoSchema = new mongoose.Schema({
   mascota: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "Mascota",
-    required: true
+    required: true,
   },
   plan: {
     type: String,
     enum: ["Primeros pasos", "Madurando", "Adultos"],
-    required: true
-  },
-  fecha: {
-    type: Date, 
-    required: true
-  },
-  horario: {
-    type: String, 
-    required: true
+    required: true,
   },
   veterinario: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "usuarios", 
-    required: true
+    ref: "usuarios",
+    required: true,
   },
   usuario: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "usuarios",
-    required: true
+    required: true,
   },
   estado: {
     type: String,
-    default: "activo"
+    default: "activo",
   },
   creadoEn: {
     type: Date,
-    default: Date.now
-  }
+    default: Date.now,
+  },
 });
 
-const PlanContratadoModel = mongoose.model("PlanContratado", PlanContratadoSchema);
+const PlanContratadoModel = mongoose.model(
+  "PlanContratado",
+  PlanContratadoSchema
+);
 
-module.exports = PlanContratadoModel
+module.exports = PlanContratadoModel;
