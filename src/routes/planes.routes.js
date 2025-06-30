@@ -82,8 +82,6 @@ router.post(
   [
     check("mascota", "Campo MASCOTA esta vacio").notEmpty(),
     check("veterinario", "Campo VETERINARIO esta vacio").notEmpty(),
-    check("fecha", "Campo FECHA esta vacio").notEmpty(),
-    check("horario", "Campo HORA esta vacio").notEmpty(),
   ],
   validarCampos,
   auth(["usuario", "admin", "veterinario"]),
