@@ -19,7 +19,7 @@ router.put(
   "/agregarProducto/:idProducto",
   [
     check(
-      "id",
+      "idProducto",
       "ERROR. ID incorrecto. El formato no corresponde a mongoose"
     ).isMongoId(),
   ],
@@ -32,7 +32,7 @@ router.put(
   "/eliminarProducto/:idProducto",
   [
     check(
-      "id",
+      "idProducto",
       "ERROR. ID incorrecto. El formato no corresponde a mongoose"
     ).isMongoId(),
   ],
