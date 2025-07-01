@@ -13,7 +13,7 @@ const {
 } = require("../controllers/servicios.controllers");
 const multerMiddlewares = require("../middlewares/multer.middlewares.js");
 
-router.get("/", obtenerTodosLosServicios);
+router.get("/", auth("admin"), obtenerTodosLosServicios);
 
 router.get("/:id", [
   check(
@@ -21,6 +21,7 @@ router.get("/:id", [
     "ERROR. ID incorrecto. El formato no corresponde a mongoose"
   ).isMongoId(),
   validarCampos,
+  auth("admin"),
   obtenerServicioById,
 ]);
 
@@ -47,6 +48,7 @@ router.put(
     "ERROR. ID incorrecto. El formato no corresponde a mongoose"
   ).isMongoId(),
   validarCampos,
+  auth("admin"),
   actualizarUnServicio
 );
 
@@ -56,6 +58,7 @@ router.delete("/:id", [
     "ERROR. ID incorrecto. El formato no corresponde a mongoose"
   ).isMongoId(),
   validarCampos,
+  auth("admin"),
   eliminarUnServicio,
 ]);
 
