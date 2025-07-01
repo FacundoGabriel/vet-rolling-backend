@@ -29,6 +29,7 @@ const agregarUnServicioBD = async (body) => {
     await nuevoServicio.save();
     return {
       msg: "El producto fue creado con exito",
+      idServicio: nuevoServicio._id,
       statusCode: 201,
     };
   } catch (error) {
@@ -37,6 +38,17 @@ const agregarUnServicioBD = async (body) => {
       statusCode: 500,
     };
   }
+};
+const agregarImagenServicioArray = async (idServicio, file) => {
+  const servicio = await serviciosModel.findOne({ _id: idServicio });
+  const imagen = await cloudinary.uploader.upload(file.path);
+  servicio.imagen = imagen.secure_url;
+  await servicio.save();
+
+  return {
+    msg: "Imagen agregada al servicio",
+    statusCode: 200,
+  };
 };
 
 const obtenerServicioByIdBD = async (idServicio) => {
@@ -116,4 +128,5 @@ module.exports = {
   obtenerServicioByIdBD,
   actualizarUnServicioBD,
   eliminarUnServicioBD,
+  agregarImagenServicioArray,
 };
