@@ -31,10 +31,11 @@ const mercadoPagoServicesServicio = async (idServicio) => {
           },
         ],
         back_urls: {
-          success: `${process.env.FRONT_URL}/user?success`,
-          pending: `${process.env.FRONT_URL}/user?pending`,
-          failure: `${process.env.FRONT_URL}/user?failure`,
+          success: `${process.env.FRONT_URL}/confirmar-turno?status=success`,
+          pending: `${process.env.FRONT_URL}/confirmar-turno?status=pending`,
+          failure: `${process.env.FRONT_URL}/confirmar-turno?status=failure`,
         },
+        auto_return: "approved",
       },
     });
 
@@ -84,9 +85,9 @@ const mercadoPagoServicesPlanes = async (idPlan) => {
           },
         ],
         back_urls: {
-          success: `${process.env.FRONT_URL}/user?success`,
-          pending: `${process.env.FRONT_URL}/user?pending`,
-          failure: `${process.env.FRONT_URL}/user?failure`,
+          success: `${process.env.FRONT_URL}/confirmar-pago?success`,
+          pending: `${process.env.FRONT_URL}/confirmar-pago?pending`,
+          failure: `${process.env.FRONT_URL}/confirmar-pago?failure`,
         },
       },
     });

@@ -52,6 +52,7 @@ const crearTurnoBD = async (body, idUsuario) => {
 
     return {
       msg: "Turno reservado correctamente.",
+      idTurno: nuevoTurno._id,
       statusCode: 201,
     };
   } catch (error) {
@@ -169,11 +170,34 @@ const obtenerTurnosBD = async (idUsuario) => {
     };
   }
 };
-
+const confirmarTurnoBD = async (idTurno) => {
+  try {
+    const turno = await TurnoModels.findById(idTurno);
+    if (!turno) {
+      return {
+        msg: "Turno no encontrado",
+        statusCode: 404,
+      };
+    }
+    turno.estado = "activo";
+    await turno.save();
+    return {
+      msg: "Turno pagado correctamente",
+      statusCode: 200,
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      error,
+      statusCode: 500,
+    };
+  }
+};
 module.exports = {
   crearTurnoBD,
   cancelarTurnoBD,
   cancelarTurnoComoVeterinarioBD,
   obtenerTurnosVeterinarioBD,
   obtenerTurnosBD,
+  confirmarTurnoBD,
 };

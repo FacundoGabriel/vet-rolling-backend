@@ -26,6 +26,11 @@ const TurnoSchema = new Schema({
     ref: "usuarios",
     required: true,
   },
+  estado: {
+    type: String,
+    enum: ["pendiente", "activo"],
+    default: "pendiente",
+  },
 });
 
 TurnoSchema.index({ fechaHora: 1, veterinario: 1 }, { unique: true });
