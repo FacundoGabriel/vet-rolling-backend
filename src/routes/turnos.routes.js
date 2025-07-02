@@ -64,5 +64,9 @@ router.get(
   auth(["usuario", "admin", "veterinario"]),
   obtenerTurnos
 );
-router.put("/confirmar-turno/:idTurno", confirmarTurno);
+router.put(
+  "/confirmar-turno/:idTurno",
+  auth(["usuario", "admin", "veterinario"]),
+  confirmarTurno
+);
 module.exports = router;
