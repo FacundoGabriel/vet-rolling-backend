@@ -87,8 +87,42 @@ const recuperarContrasenia = async (userEmail, token) => {
   });
 };
 
+const contactoFormulario = async (nombre, email, mensaje) => {
+  const info = await transporter.sendMail({
+    from: `"RollingVet 🐾" <${process.env.GMAIL_USER}>`,
+    to: email,
+    subject: "Hemos recibido tu consulta",
+    text: "Hello world?",
+    html: `
+      <div style="font-family: Arial, sans-serif; background-color: #f9f9f9; padding: 30px; border-radius: 8px; max-width: 600px; margin: auto; color: #333;">
+        <h2 style="color: #00466e;">Hola ${nombre},</h2>
+  
+        <p style="font-size: 16px;">
+          Muchas gracias por comunicarte con nosotros. Recibimos tu mensaje y en breve uno de nuestros profesionales se pondrá en contacto contigo para ayudarte a vos y a tu peludito.
+        </p>
+
+        <p style="font-size: 16px;">
+          Nos importa el bienestar de tus mascotas, y estamos aquí para brindarles el mejor cuidado posible.
+        </p>
+
+        <div style="background-color: #eef3f7; padding: 15px; border-left: 4px solid #00466e; margin: 20px 0; border-radius: 4px;">
+          <p style="margin: 0;"><strong>Tu mensaje:</strong></p>
+          <p style="margin: 5px 0 0 0; white-space: pre-wrap;">${mensaje}</p>
+        </div>
+
+        <p style="font-size: 14px; color: #555;">
+          Si tu consulta es urgente, te recomendamos llamarnos directamente o visitarnos en nuestra clínica. Todos los datos están disponibles en nuestra web o redes sociales.
+        </p>
+
+        <p style="font-size: 14px; color: #555;">Saludos cordiales,<br><strong>El equipo de RollingVet 🐾</strong></p>
+      </div>
+    `,
+  });
+};
+
 module.exports = {
   registroExitoso,
   cuentaHabilitadaVeterinario,
   recuperarContrasenia,
+  contactoFormulario,
 };
