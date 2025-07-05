@@ -12,7 +12,10 @@ const UsuariosSchema = new Schema({
   },
   emailUsuario: {
     type: String,
-    match: [/^[a-z0-9!#$%&'*+/=?^_`{|}~\-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~\-]+)*@(?:[a-z0-9](?:[a-z0-9\-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9\-]*[a-z0-9])?$/, "Formato de email incorrecto"]
+    match: [
+      /^[a-z0-9!#$%&'*+/=?^_`{|}~\-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~\-]+)*@(?:[a-z0-9](?:[a-z0-9\-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9\-]*[a-z0-9])?$/,
+      "Formato de email incorrecto",
+    ],
   },
   contrasenia: {
     type: String,
@@ -22,16 +25,19 @@ const UsuariosSchema = new Schema({
     type: String,
     trim: true,
     enum: ["habilitado", "deshabilitado"],
-    default: "deshabilitado"
+    default: "deshabilitado",
   },
   telefono: {
     type: String,
-    match: [/^(\+54\s?)?(\d{2,4}[-\s]?)?\d{6,8}$/, 'Número de teléfono inválido'],
+    match: [
+      /^(\+54\s?)?(\d{2,4}[-\s]?)?\d{6,8}$/,
+      "Número de teléfono inválido",
+    ],
   },
   rol: {
     type: String,
     enum: ["usuario", "admin", "veterinario"],
-    default: "usuario"
+    default: "usuario",
   },
   fechaReg: {
     type: Date,
@@ -45,29 +51,31 @@ const UsuariosSchema = new Schema({
     type: String,
     trim: true,
   },
-  mascotas: [{
-    type: Schema.Types.ObjectId,
-    ref: "Mascota"
-  }],
+  mascotas: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Mascota",
+    },
+  ],
   foto: {
     type: String,
     trim: true,
-    default: "url",
+    default:
+      "https://res.cloudinary.com/dk3h8a3x4/image/upload/v1751675221/ChatGPT_Image_4_jul_2025_21_24_52_qz2dh6.png",
   },
 
   solicitoVeterinario: {
     type: Boolean,
-    default: false
+    default: false,
   },
   especialidad: {
     type: String,
-    trim: true
+    trim: true,
   },
   descripcion: {
     type: String,
-    trim: true
-  }
-
+    trim: true,
+  },
 });
 
 UsuariosSchema.methods.toJSON = function () {
