@@ -32,7 +32,6 @@ router.post(
   [
     check("nombre", "ERROR. El campo NOMBRE está vacío").notEmpty(),
     check("precio", "ERROR. El campo PRECIO está vacío").notEmpty(),
-    check("imagen", "ERROR. El campo IMAGEN está vacío").notEmpty(),
     check("descripcion", "ERROR. El campo DESCRIPCION está vacío").notEmpty(),
   ],
   validarCampos,
@@ -43,7 +42,6 @@ router.post(
 router.put(
   "/agregarImagen/:id",
   multerMiddlewares.single("imagen"),
-  auth("admin"),
   agregarImagenProducto
 );
 

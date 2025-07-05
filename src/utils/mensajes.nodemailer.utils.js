@@ -119,10 +119,42 @@ const contactoFormulario = async (nombre, email, mensaje) => {
     `,
   });
 };
+const enviarConfirmacionPlan = async (nombre, email, nombreMascota, nombrePlan) => {
+  const info = await transporter.sendMail({
+    from: `"RollingVet 🐾" <${process.env.GMAIL_USER}>`,
+    to: email,
+    subject: "¡Plan contratado exitosamente!",
+    html: `
+      <div style="font-family: Arial, sans-serif; background-color: #f9f9f9; padding: 30px; border-radius: 8px; max-width: 600px; margin: auto; color: #333;">
+        <h2 style="color: #00466e;">Hola ${nombre},</h2>
+
+        <p style="font-size: 16px;">
+          ¡Gracias por confiar en RollingVet! Te confirmamos que el plan <strong>${nombrePlan}</strong> ha sido contratado con éxito para tu mascota <strong>${nombreMascota}</strong>.
+        </p>
+
+        <p style="font-size: 16px;">
+          A partir de ahora, tu mascota cuenta con todos los beneficios y cuidados que este plan ofrece.
+        </p>
+
+        <div style="background-color: #eef3f7; padding: 15px; border-left: 4px solid #00466e; margin: 20px 0; border-radius: 4px;">
+          <p style="margin: 0;"><strong>Mascota:</strong> ${nombreMascota}</p>
+          <p style="margin: 0;"><strong>Plan contratado:</strong> ${nombrePlan}</p>
+        </div>
+
+        <p style="font-size: 14px; color: #555;">
+          Si tenés dudas o necesitás ayuda, no dudes en comunicarte con nosotros.
+        </p>
+
+        <p style="font-size: 14px; color: #555;">Saludos cordiales,<br><strong>El equipo de RollingVet 🐾</strong></p>
+      </div>
+    `,
+  });
+};
 
 module.exports = {
   registroExitoso,
   cuentaHabilitadaVeterinario,
   recuperarContrasenia,
   contactoFormulario,
+  enviarConfirmacionPlan,
 };

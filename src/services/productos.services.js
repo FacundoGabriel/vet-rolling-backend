@@ -47,6 +47,7 @@ const crearUnProductoBD = async (body) => {
       statusCode: 201,
     };
   } catch (error) {
+    console.log(error);
     return {
       error,
       statusCode: 500,
