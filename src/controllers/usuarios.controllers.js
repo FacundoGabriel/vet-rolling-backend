@@ -24,12 +24,19 @@ const registrarUsuario = async (req, res) => {
 };
 
 const iniciarSesionUsuario = async (req, res) => {
-  const { msg, statusCode, token, error, idUsuario, rolUsuario } =
-    await iniciarSesionUsuarioDB(req.body);
+  const {
+    msg,
+    statusCode,
+    token,
+    error,
+    idUsuario,
+    rolUsuario,
+    nombreUsuario,
+  } = await iniciarSesionUsuarioDB(req.body);
   try {
     res
       .status(statusCode)
-      .json({ msg, idUsuario, statusCode, token, rolUsuario });
+      .json({ msg, idUsuario, statusCode, token, rolUsuario, nombreUsuario });
   } catch {
     res.status(statusCode).json(error);
   }

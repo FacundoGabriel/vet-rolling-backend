@@ -79,6 +79,7 @@ const iniciarSesionUsuarioDB = async (body) => {
         rolUsuario: usuarioExiste.rol,
         idCarrito: usuarioExiste.idCarrito,
         idFavoritos: usuarioExiste.idFavoritos,
+        nombreUsuario: usuarioExiste.nombreUsuario,
       };
 
       const token = jwt.sign(payload, process.env.JWT_SECRET);
@@ -87,6 +88,7 @@ const iniciarSesionUsuarioDB = async (body) => {
         msg: "Usuario logueado correctamente",
         idUsuario: usuarioExiste._id,
         rolUsuario: usuarioExiste.rol,
+        nombreUsuario: usuarioExiste.nombreUsuario,
         token,
         statusCode: 200,
       };
