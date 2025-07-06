@@ -32,7 +32,6 @@ router.post(
 router.put(
   "/agregarImagen/:id",
   multerMiddlewares.single("imagen"),
-  auth("admin"),
   agregarImagenPlan
 );
 

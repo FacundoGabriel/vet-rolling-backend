@@ -76,19 +76,9 @@ const obtenerUnPlanBD = async (idPlan) => {
 
 const editarPlanBD = async (idPlan, body) => {
   try {
-    const planActualizado = await PlanModel.findByIdAndUpdate(idPlan, body, {
-      new: true,
-    });
-
-    if (!planActualizado) {
-      return {
-        msg: "Plan no encontrado para editar",
-        statusCode: 404,
-      };
-    }
-
+    await PlanModels.findByIdAndUpdate({ _id: idPlan }, body);
     return {
-      msg: "Plan actualizado correctamente",
+      msg: "El plan se actualizó correctamente",
       statusCode: 200,
     };
   } catch (error) {
