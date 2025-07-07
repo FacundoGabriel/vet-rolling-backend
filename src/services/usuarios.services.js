@@ -202,7 +202,7 @@ const bajaFisicaUsuarioPorIdBD = async (idUsuario) => {
 const editarInfoUsuarioPorIdBD = async (idUsuario, body) => {
   try {
     if (body.contrasenia) {
-      body.contrasenia = await argon.hash(body.contrasenia);
+      usuarioExiste.contrasenia = await argon.hash(body.contrasenia);
     }
     const usuarioExiste = await UsuariosModel.findByIdAndUpdate(
       { _id: idUsuario },
