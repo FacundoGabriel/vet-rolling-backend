@@ -32,6 +32,7 @@ router.post(
     check("descripcion", "ERROR. El campo DESCRIPCION está vacío").notEmpty(),
   ],
   validarCampos,
+  auth("admin"),
   agregarUnServicio
 );
 router.put(

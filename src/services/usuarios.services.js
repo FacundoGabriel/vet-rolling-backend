@@ -18,10 +18,16 @@ const registrarUsuarioBD = async (body) => {
 
     nuevoUsuario.idCarrito = nuevoCarrito._id;
     nuevoUsuario.idFavoritos = nuevoFavoritos._id;
+    const payloadHabilitar = {
+      idUsuario: nuevoUsuario._id,
+    };
+
+    const tokenHabilitar = jwt.sign(payloadHabilitar, process.env.JWT_SECRET);
 
     const { info, rejected } = await registroExitoso(
       nuevoUsuario.emailUsuario,
-      nuevoUsuario.nombreUsuario
+      nuevoUsuario.nombreUsuario,
+      tokenHabilitar
     );
     if (info && !rejected.length) {
       await nuevoCarrito.save();
@@ -196,9 +202,8 @@ const bajaFisicaUsuarioPorIdBD = async (idUsuario) => {
 const editarInfoUsuarioPorIdBD = async (idUsuario, body) => {
   try {
     if (body.contrasenia) {
-      delete body.contrasenia;
+      body.contrasenia = await argon.hash(body.contrasenia);
     }
-
     const usuarioExiste = await UsuariosModel.findByIdAndUpdate(
       { _id: idUsuario },
       body
@@ -356,6 +361,41 @@ const cambiarContraseniaRecuperacionBD = async (token, nuevaContrasenia) => {
     };
   }
 };
+const habilitarMiCuentaBD = async (token) => {
+  try {
+    const verificarUsuario = jwt.verify(token, process.env.JWT_SECRET);
+
+    if (!verificarUsuario) {
+      return {
+        msg: "Error al leer el token",
+        statusCode: 400,
+      };
+    }
+    const usuario = await UsuariosModel.findOne({
+      _id: verificarUsuario.idUsuario,
+    });
+    if (usuario.estado === "habilitado") {
+      return {
+        msg: "Usuario ya habilitado",
+        statusCode: 400,
+      };
+    }
+
+    usuario.estado = "habilitado";
+
+    await usuario.save();
+
+    return {
+      msg: "Cuenta habilitada con exito",
+      statusCode: 200,
+    };
+  } catch (error) {
+    return {
+      error,
+      statusCode: 500,
+    };
+  }
+};
 
 module.exports = {
   registrarUsuarioBD,
@@ -370,4 +410,5 @@ module.exports = {
   obtenerUnUsuarioPorIdBD,
   recuperarContraseniaUsuarioBD,
   cambiarContraseniaRecuperacionBD,
+  habilitarMiCuentaBD,
 };
