@@ -44,6 +44,7 @@ const crearUnProductoBD = async (body) => {
 
     return {
       msg: "El producto fue creado con exito",
+      idProducto: nuevoProducto._id,
       statusCode: 201,
     };
   } catch (error) {
