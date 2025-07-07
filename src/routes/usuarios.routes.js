@@ -12,6 +12,7 @@ const {
   agregarImagenUsuario,
   recuperarContraseniaUsuario,
   cambiarContraseniaRecuperacion,
+  habilitarMiCuenta,
 } = require("../controllers/usuarios.controllers");
 const router = Router();
 const { check } = require("express-validator");
@@ -110,5 +111,6 @@ router.get(
 
 router.post("/recoveryPass", recuperarContraseniaUsuario);
 router.put("/changePassUser", cambiarContraseniaRecuperacion);
+router.put("/habilitar-mi-cuenta", habilitarMiCuenta);
 
 module.exports = router;
