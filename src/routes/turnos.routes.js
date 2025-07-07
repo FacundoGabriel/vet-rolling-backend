@@ -7,6 +7,7 @@ const {
   cancelarTurnoComoVeterinario,
   obtenerTurnosVeterinario,
   obtenerTurnos,
+  confirmarTurno,
 } = require("../controllers/turnos.controllers");
 
 const validarCampos = require("../middlewares/validarCampos");
@@ -62,5 +63,10 @@ router.get(
   "/mis-turnos",
   auth(["usuario", "admin", "veterinario"]),
   obtenerTurnos
+);
+router.put(
+  "/confirmar-turno/:idTurno",
+  auth(["usuario", "admin", "veterinario"]),
+  confirmarTurno
 );
 module.exports = router;

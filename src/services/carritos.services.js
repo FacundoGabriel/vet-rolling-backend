@@ -3,7 +3,7 @@ const ProductosModel = require("../models/productos.model");
 
 const obtenerProductosDelCarritoBD = async (idCarrito) => {
   try {
-    const carrito = await CarritosModel.findById({ idCarrito });
+    const carrito = await CarritosModel.findOne({ _id: idCarrito });
     return {
       productos: carrito.productos,
       statusCode: 200,

@@ -11,6 +11,7 @@ const {
   agregarImagenUsuarioArray,
   cambiarContraseniaRecuperacionBD,
   recuperarContraseniaUsuarioBD,
+  habilitarMiCuentaBD,
 } = require("../services/usuarios.services");
 
 const registrarUsuario = async (req, res) => {
@@ -24,12 +25,19 @@ const registrarUsuario = async (req, res) => {
 };
 
 const iniciarSesionUsuario = async (req, res) => {
-  const { msg, statusCode, token, error, idUsuario, rolUsuario } =
-    await iniciarSesionUsuarioDB(req.body);
+  const {
+    msg,
+    statusCode,
+    token,
+    error,
+    idUsuario,
+    rolUsuario,
+    nombreUsuario,
+  } = await iniciarSesionUsuarioDB(req.body);
   try {
     res
       .status(statusCode)
-      .json({ msg, idUsuario, statusCode, token, rolUsuario });
+      .json({ msg, idUsuario, statusCode, token, rolUsuario, nombreUsuario });
   } catch {
     res.status(statusCode).json(error);
   }
@@ -143,6 +151,16 @@ const cambiarContraseniaRecuperacion = async (req, res) => {
     res.status(statusCode).json({ error });
   }
 };
+const habilitarMiCuenta = async (req, res) => {
+  const token = req.header("authHabilitar");
+
+  const { msg, statusCode, error } = await habilitarMiCuentaBD(token);
+  try {
+    res.status(statusCode).json({ msg });
+  } catch {
+    res.status(statusCode).json({ error });
+  }
+};
 
 module.exports = {
   registrarUsuario,
@@ -157,4 +175,5 @@ module.exports = {
   obtenerUnUsuarioPorId,
   recuperarContraseniaUsuario,
   cambiarContraseniaRecuperacion,
+  habilitarMiCuenta,
 };

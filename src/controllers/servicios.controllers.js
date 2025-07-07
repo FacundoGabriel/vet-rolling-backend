@@ -4,6 +4,7 @@ const {
   obtenerServicioByIdBD,
   actualizarUnServicioBD,
   eliminarUnServicioBD,
+  agregarImagenServicioArray,
 } = require("../services/servicios.services");
 
 const obtenerTodosLosServicios = async (req, res) => {
@@ -17,11 +18,20 @@ const obtenerTodosLosServicios = async (req, res) => {
 
 const agregarUnServicio = async (req, res) => {
   try {
-    const { statusCode, msg, msgError } = await agregarUnServicioBD(req.body);
-    return res.status(statusCode).json({ msg });
+    const { statusCode, msg, msgError, idServicio } = await agregarUnServicioBD(
+      req.body
+    );
+    return res.status(statusCode).json({ msg, idServicio });
   } catch {
     return res.status(500).json({ msgError });
   }
+};
+const agregarImagenServicio = async (req, res) => {
+  const { statusCode, msg } = await agregarImagenServicioArray(
+    req.params.id,
+    req.file
+  );
+  res.status(statusCode).json({ msg });
 };
 
 const obtenerServicioById = async (req, res) => {
@@ -72,4 +82,5 @@ module.exports = {
   obtenerServicioById,
   actualizarUnServicio,
   eliminarUnServicio,
+  agregarImagenServicio,
 };

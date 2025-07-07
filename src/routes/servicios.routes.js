@@ -9,7 +9,9 @@ const {
   obtenerServicioById,
   actualizarUnServicio,
   eliminarUnServicio,
+  agregarImagenServicio,
 } = require("../controllers/servicios.controllers");
+const multerMiddlewares = require("../middlewares/multer.middlewares.js");
 
 router.get("/", obtenerTodosLosServicios);
 
@@ -27,11 +29,16 @@ router.post(
   [
     check("nombre", "ERROR. El campo NOMBRE está vacío").notEmpty(),
     check("precio", "ERROR. El campo PRECIO está vacío").notEmpty(),
-    check("imagen", "ERROR. El campo IMAGEN está vacío").notEmpty(),
     check("descripcion", "ERROR. El campo DESCRIPCION está vacío").notEmpty(),
   ],
   validarCampos,
+  auth("admin"),
   agregarUnServicio
+);
+router.put(
+  "/agregarImagen/:id",
+  multerMiddlewares.single("foto"),
+  agregarImagenServicio
 );
 
 router.put(
@@ -41,6 +48,7 @@ router.put(
     "ERROR. ID incorrecto. El formato no corresponde a mongoose"
   ).isMongoId(),
   validarCampos,
+  auth("admin"),
   actualizarUnServicio
 );
 
@@ -50,6 +58,7 @@ router.delete("/:id", [
     "ERROR. ID incorrecto. El formato no corresponde a mongoose"
   ).isMongoId(),
   validarCampos,
+  auth("admin"),
   eliminarUnServicio,
 ]);
 

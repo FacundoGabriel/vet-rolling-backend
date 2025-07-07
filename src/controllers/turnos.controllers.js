@@ -4,16 +4,17 @@ const {
   cancelarTurnoComoVeterinarioBD,
   obtenerTurnosVeterinarioBD,
   obtenerTurnosBD,
+  confirmarTurnoBD,
 } = require("../services/turnos.services");
 
 const crearTurno = async (req, res) => {
-  const { msg, statusCode, error } = await crearTurnoBD(
+  const { msg, statusCode, error, idTurno } = await crearTurnoBD(
     req.body,
     req.idUsuario
   );
 
   try {
-    res.status(statusCode).json({ msg });
+    res.status(statusCode).json({ msg, idTurno });
   } catch {
     res.status(statusCode).json({ error });
   }
@@ -65,10 +66,19 @@ const obtenerTurnos = async (req, res) => {
     res.status(statusCode).json({ error });
   }
 };
+const confirmarTurno = async (req, res) => {
+  const { msg, statusCode, error } = await confirmarTurnoBD(req.params.idTurno);
+  try {
+    res.status(statusCode).json({ msg });
+  } catch {
+    res.status(statusCode).json({ error });
+  }
+};
 module.exports = {
   crearTurno,
   cancelarTurno,
   cancelarTurnoComoVeterinario,
   obtenerTurnosVeterinario,
   obtenerTurnos,
+  confirmarTurno,
 };
