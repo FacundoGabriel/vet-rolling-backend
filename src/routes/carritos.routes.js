@@ -3,6 +3,7 @@ const {
   obtenerProductosDelCarrito,
   agregarProductoCarrito,
   eliminarProductoCarrito,
+  vaciarCarrito,
 } = require("../controllers/carritos.controllers");
 const validarCampos = require("../middlewares/validarCampos");
 const { check } = require("express-validator");
@@ -39,6 +40,13 @@ router.put(
   auth(["usuario", "admin"]),
   validarCampos,
   eliminarProductoCarrito
+);
+
+router.put(
+  "/vaciarCarrito",
+  auth(["usuario", "admin"]),
+  validarCampos,
+  vaciarCarrito
 );
 
 module.exports = router;
