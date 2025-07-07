@@ -5,7 +5,6 @@ const MascotaSchema = new mongoose.Schema({
     type: String,
     trim: true,
     required: true,
-    unique: true,
     lowerCase: true,
     maxLength: [30, "Limite maximo 30 caracteres"],
     minLength: [3, "Limite minimo 3 caracteres"],
