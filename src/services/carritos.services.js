@@ -70,8 +70,27 @@ const eliminarProductoCarritoBD = async (idCarrito, idProducto) => {
   }
 };
 
+const vaciarCarritoBD = async (idUsuario) => {
+  try {
+    await Carrito.updateOne(
+      { usuario: idUsuario },
+      { $set: { productos: [] } }
+    );
+    return {
+      statusCode: 200,
+      msg: "Carrito vaciado correctamente",
+    };
+  } catch (error) {
+    return {
+      statusCode: 500,
+      error,
+    };
+  }
+};
+
 module.exports = {
   obtenerProductosDelCarritoBD,
   agregarProductoCarritoBD,
   eliminarProductoCarritoBD,
+  vaciarCarritoBD,
 };
