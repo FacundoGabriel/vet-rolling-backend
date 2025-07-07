@@ -8,19 +8,24 @@ const {
 } = require("../services/productos.services");
 
 const crearUnProducto = async (req, res) => {
-  const { statusCode, msg, error } = await crearUnProductoBD(req.body);
+  const { statusCode, msg, error, idProducto } = await crearUnProductoBD(
+    req.body
+  );
 
   try {
-    res.status(statusCode).json({ msg });
-  } catch (error) {
+    res.status(statusCode).json({ msg, idProducto });
+  } catch {
     res.status(statusCode).json({ error });
   }
 };
 
-const agregarImagenProducto = async (req,res) =>{
-    const {statusCode, msg} = await agregarImagenProductoArray(req.params.id, req.file)
-    res.status(statusCode).json({msg})
-}
+const agregarImagenProducto = async (req, res) => {
+  const { statusCode, msg } = await agregarImagenProductoArray(
+    req.params.id,
+    req.file
+  );
+  res.status(statusCode).json({ msg });
+};
 
 const obtenerTodosLosProductos = async (req, res) => {
   const { statusCode, productos, error } = await obtenerTodosLosProductosBD();
