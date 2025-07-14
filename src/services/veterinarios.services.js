@@ -36,8 +36,15 @@ const registrarVeterinarioBD = async (body) => {
       statusCode: 201,
     };
   } catch (error) {
-    console.log(error);
+    if (error.code === 11000) {
+      return {
+        msg: `El usuario o correo ya está en uso.`,
+        statusCode: 409,
+      };
+    }
+
     return {
+      msg: "Error en el servidor",
       error,
       statusCode: 500,
     };
