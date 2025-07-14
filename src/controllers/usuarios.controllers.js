@@ -20,7 +20,7 @@ const registrarUsuario = async (req, res) => {
   try {
     res.status(statusCode).json({ msg, statusCode });
   } catch {
-    res.status(statusCode).json(error);
+    res.status(statusCode).json({ error, msg });
   }
 };
 

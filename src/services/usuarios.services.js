@@ -13,11 +13,13 @@ const registrarUsuarioBD = async (body) => {
   try {
     const nuevoUsuario = new UsuariosModel(body);
     nuevoUsuario.contrasenia = await argon.hash(body.contrasenia);
+
     const nuevoCarrito = new CarritosModel({ idUsuario: nuevoUsuario._id });
     const nuevoFavoritos = new FavoritosModel({ idUsuario: nuevoUsuario._id });
 
     nuevoUsuario.idCarrito = nuevoCarrito._id;
     nuevoUsuario.idFavoritos = nuevoFavoritos._id;
+
     const payloadHabilitar = {
       idUsuario: nuevoUsuario._id,
     };
@@ -29,36 +31,50 @@ const registrarUsuarioBD = async (body) => {
       nuevoUsuario.nombreUsuario,
       tokenHabilitar
     );
+
     if (info && !rejected.length) {
       await nuevoCarrito.save();
       await nuevoFavoritos.save();
       await nuevoUsuario.save();
+
       return {
-        msg: "Usuario registrado con exito",
-
+        msg: "Usuario registrado con éxito",
         idUsuario: nuevoUsuario._id,
-
         statusCode: 201,
       };
     } else {
       return {
         msg: "ERROR al intentar crear el usuario",
+        statusCode: 500,
       };
     }
   } catch (error) {
-    console.log(error);
-    return {
-      error,
+    if (error.code === 11000) {
+      return {
+        msg: `El usuario o correo ya está en uso.`,
+        statusCode: 409,
+      };
+    }
 
+    return {
+      msg: "Error en el servidor",
+      error,
       statusCode: 500,
     };
   }
 };
+
 const iniciarSesionUsuarioDB = async (body) => {
   try {
     const usuarioExiste = await UsuariosModel.findOne({
       emailUsuario: body.emailUsuario,
     });
+    if (!usuarioExiste) {
+      return {
+        msg: "ERROR. El usuario y/o contraseña incorrectas.",
+        statusCode: 401,
+      };
+    }
 
     if (usuarioExiste.estado !== "habilitado") {
       return {
@@ -202,7 +218,7 @@ const bajaFisicaUsuarioPorIdBD = async (idUsuario) => {
 const editarInfoUsuarioPorIdBD = async (idUsuario, body) => {
   try {
     if (body.contrasenia) {
-      usuarioExiste.contrasenia = await argon.hash(body.contrasenia);
+      body.contrasenia = await argon.hash(body.contrasenia);
     }
     const usuarioExiste = await UsuariosModel.findByIdAndUpdate(
       { _id: idUsuario },
@@ -221,6 +237,7 @@ const editarInfoUsuarioPorIdBD = async (idUsuario, body) => {
       statusCode: 200,
     };
   } catch (error) {
+    console.log(error);
     return {
       error,
       statusCode: 500,

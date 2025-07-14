@@ -13,7 +13,7 @@ const registrarVeterinario = async (req, res) => {
   try {
     res.status(statusCode).json({ msg, statusCode, idUsuario });
   } catch {
-    res.status(statusCode).json(error);
+    res.status(statusCode).json({ error, msg });
   }
 };
 

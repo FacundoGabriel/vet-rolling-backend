@@ -5,9 +5,13 @@ const MascotaSchema = new mongoose.Schema({
     type: String,
     trim: true,
     required: true,
-    lowerCase: true,
-    maxLength: [30, "Limite maximo 30 caracteres"],
-    minLength: [3, "Limite minimo 3 caracteres"],
+    lowercase: true,
+    maxLength: [30, "Límite máximo 30 caracteres"],
+    minLength: [3, "Límite mínimo 3 caracteres"],
+    match: [
+      /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/,
+      "El nombre solo puede contener letras y espacios",
+    ],
   },
   especie: {
     type: String,
@@ -16,6 +20,11 @@ const MascotaSchema = new mongoose.Schema({
   },
   raza: {
     type: String,
+    trim: true,
+    match: [
+      /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/,
+      "La raza solo puede contener letras y espacios",
+    ],
   },
   sexo: {
     type: String,
@@ -23,11 +32,17 @@ const MascotaSchema = new mongoose.Schema({
   },
   peso: {
     type: Number,
+    min: [0.1, "El peso debe ser mayor que cero"],
   },
   fechaNacimiento: {
-    type: String,
+    type: Date,
+    validate: {
+      validator: function (value) {
+        return value <= new Date();
+      },
+      message: "La fecha de nacimiento no puede ser futura",
+    },
   },
-
   propietario: {
     type: String,
     trim: true,
@@ -44,6 +59,8 @@ const MascotaSchema = new mongoose.Schema({
     default: "Sin plan",
   },
 });
+
+MascotaSchema.index({ nombre: 1, propietario: 1 }, { unique: true });
 
 const MascotaModels = mongoose.model("Mascota", MascotaSchema);
 module.exports = MascotaModels;

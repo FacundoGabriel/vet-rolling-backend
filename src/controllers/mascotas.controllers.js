@@ -25,7 +25,7 @@ const aniadirUnaMascota = async (req, res) => {
   try {
     res.status(statusCode).json({ msg, idMascota });
   } catch {
-    res.status(statusCode).json({ error });
+    res.status(statusCode).json({ error, msg });
   }
 };
 const agregarImagenMascota = async (req, res) => {

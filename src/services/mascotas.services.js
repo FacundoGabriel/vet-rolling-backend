@@ -46,8 +46,15 @@ const aniadirUnaMascotaBD = async (body, idUsuario) => {
       idMascota: nuevaMascota._id,
     };
   } catch (error) {
-    console.log(error);
+    if (error.code === 11000) {
+      return {
+        msg: `No puedes tener dos mascotas con el mismo nombre.`,
+        statusCode: 409,
+      };
+    }
+
     return {
+      msg: "Error en el servidor",
       error,
       statusCode: 500,
     };
