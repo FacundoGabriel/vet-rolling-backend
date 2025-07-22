@@ -141,19 +141,81 @@ const aniadirPlanBD = async (body, idUsuario) => {
 
     await nuevoPlan.save();
 
-    mascotaExiste.plan = plan;
-    await mascotaExiste.save();
-
-    await enviarConfirmacionPlan(
-      usuarioExiste.nombreUsuario,
-      usuarioExiste.emailUsuario,
-      mascotaExiste.nombre,
-      plan
-    );
-
     return {
       msg: "Plan añadido correctamente",
       statusCode: 201,
+      idPlan: nuevoPlan._id,
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      error,
+      statusCode: 500,
+    };
+  }
+};
+const confirmacionPagoPlanBD = async (idPlan, idMascota, idUsuario) => {
+  try {
+    const usuario = await UsuariosModel.findById(idUsuario);
+    const mascota = await MascotaModels.findById(idMascota);
+    const plan = await PlanContratadoModel.findById(idPlan);
+
+    if (!usuario) {
+      return { msg: "Usuario no encontrado", statusCode: 404 };
+    }
+    if (!mascota) {
+      return { msg: "Mascota no encontrada", statusCode: 404 };
+    }
+    if (!plan) {
+      return { msg: "Plan no encontrado", statusCode: 404 };
+    }
+
+    if (mascota.plan !== "Sin plan") {
+      return {
+        msg: "La mascota ya tiene un plan activo",
+        statusCode: 400,
+      };
+    }
+
+    await enviarConfirmacionPlan(
+      usuario.nombreUsuario,
+      usuario.emailUsuario,
+      mascota.nombre,
+      plan.plan
+    );
+
+    plan.estado = "activo";
+    await plan.save();
+
+    mascota.plan = plan.plan;
+    await mascota.save();
+
+    return {
+      msg: "Plan confirmado correctamente",
+      statusCode: 200,
+    };
+  } catch (error) {
+    console.error("Error al confirmar pago del plan:", error);
+    return {
+      msg: "Error interno del servidor",
+      statusCode: 500,
+    };
+  }
+};
+
+const eliminarPlanMPBD = async (idPlan) => {
+  try {
+    const planEliminado = await PlanContratadoModel.findByIdAndDelete(idPlan);
+
+    if (!planEliminado) {
+      return {
+        msg: "Plan no encontrado para eliminar",
+        statusCode: 404,
+      };
+    }
+    return {
+      msg: "Plan eliminado correctamente",
+      statusCode: 200,
     };
   } catch (error) {
     console.log(error);
@@ -272,6 +334,8 @@ module.exports = {
   editarPlanBD,
   eliminarPlanBD,
   aniadirPlanBD,
+  confirmacionPagoPlanBD,
+  eliminarPlanMPBD,
   cancelarPlanBD,
   cancelarPlanComoVeterinarioBD,
   obtenerPlanesVeterinarioBD,

@@ -8,6 +8,9 @@ const {
   recuperarContrasenia,
 } = require("../utils/mensajes.nodemailer.utils");
 const cloudinary = require("../helpers/cloudinary.config.helpers");
+const MascotaModels = require("../models/mascota.models");
+const TurnoModels = require("../models/turno.model");
+const PlanContratadoModel = require("../models/planContratado.model");
 
 const registrarUsuarioBD = async (body) => {
   try {
@@ -201,6 +204,38 @@ const bajaFisicaUsuarioPorIdBD = async (idUsuario) => {
 
     await CarritosModel.findByIdAndDelete(usuarioExiste.idCarrito);
     await FavoritosModel.findByIdAndDelete(usuarioExiste.idFavoritos);
+    await TurnoModels.deleteMany({ usuario: idUsuario });
+    await PlanContratadoModel.deleteMany({ usuario: idUsuario });
+    await MascotaModels.deleteMany({ propietario: idUsuario });
+    await UsuariosModel.findByIdAndDelete({ _id: idUsuario });
+
+    return {
+      msg: "Usuario borrado con exito!",
+      statusCode: 200,
+    };
+  } catch (error) {
+    return {
+      error,
+      statusCode: 500,
+    };
+  }
+};
+const eliminarMiCuentaBD = async (idUsuario) => {
+  try {
+    const usuarioExiste = await UsuariosModel.findOne({ _id: idUsuario });
+
+    if (!usuarioExiste) {
+      return {
+        msg: "Usuario no encontrado",
+        statusCode: 404,
+      };
+    }
+
+    await CarritosModel.findByIdAndDelete(usuarioExiste.idCarrito);
+    await FavoritosModel.findByIdAndDelete(usuarioExiste.idFavoritos);
+    await TurnoModels.deleteMany({ usuario: idUsuario });
+    await PlanContratadoModel.deleteMany({ usuario: idUsuario });
+    await MascotaModels.deleteMany({ propietario: idUsuario });
     await UsuariosModel.findByIdAndDelete({ _id: idUsuario });
 
     return {
@@ -416,6 +451,7 @@ const habilitarMiCuentaBD = async (token) => {
 
 module.exports = {
   registrarUsuarioBD,
+  eliminarMiCuentaBD,
   iniciarSesionUsuarioDB,
   agregarImagenUsuarioArray,
   editarInfoUsuarioPorIdBD,

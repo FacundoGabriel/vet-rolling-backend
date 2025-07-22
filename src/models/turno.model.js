@@ -28,8 +28,12 @@ const TurnoSchema = new Schema({
   },
   estado: {
     type: String,
-    enum: ["pendiente", "activo"],
+    enum: ["pendiente", "activo", "finalizado"],
     default: "pendiente",
+  },
+  creadoEn: {
+    type: Date,
+    default: Date.now,
   },
 });
 

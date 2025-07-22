@@ -11,6 +11,8 @@ const {
   editarPlan,
   eliminarPlan,
   agregarImagenPlan,
+  confirmacionPagoPlan,
+  eliminarPlanMP,
 } = require("../controllers/planes.controllers");
 const validarCampos = require("../middlewares/validarCampos");
 const { check } = require("express-validator");
@@ -85,6 +87,34 @@ router.post(
   validarCampos,
   auth(["usuario", "admin", "veterinario"]),
   aniadirPlan
+);
+router.put(
+  "/confirmacionPagoPlan/:idPlan/:idMascota",
+  [
+    check(
+      "idPlan",
+      "ID incorrecto. Formato no corresponde a mongoose"
+    ).isMongoId(),
+    check(
+      "idMascota",
+      "ID incorrecto. Formato no corresponde a mongoose"
+    ).isMongoId(),
+  ],
+  validarCampos,
+  auth(["usuario", "admin"]),
+  confirmacionPagoPlan
+);
+router.delete(
+  "/eliminarPlanMP/:idPlan",
+  [
+    check(
+      "idPlan",
+      "ID incorrecto. Formato no corresponde a mongoose"
+    ).isMongoId(),
+  ],
+  validarCampos,
+  auth("usuario"),
+  eliminarPlanMP
 );
 router.delete(
   "/cancelarPlan/:idMascota",

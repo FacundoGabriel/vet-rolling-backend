@@ -9,6 +9,8 @@ const {
   editarPlanBD,
   eliminarPlanBD,
   agregarImagenPlanArray,
+  confirmacionPagoPlanBD,
+  eliminarPlanMPBD,
 } = require("../services/planes.services");
 
 const crearPlan = async (req, res) => {
@@ -67,10 +69,30 @@ const eliminarPlan = async (req, res) => {
   }
 };
 const aniadirPlan = async (req, res) => {
-  const { msg, statusCode, error } = await aniadirPlanBD(
+  const { msg, statusCode, error, idPlan } = await aniadirPlanBD(
     req.body,
     req.idUsuario
   );
+  try {
+    res.status(statusCode).json({ msg, idPlan });
+  } catch {
+    res.status(statusCode).json({ error });
+  }
+};
+const confirmacionPagoPlan = async (req, res) => {
+  const { msg, statusCode, error } = await confirmacionPagoPlanBD(
+    req.params.idPlan,
+    req.params.idMascota,
+    req.idUsuario
+  );
+  try {
+    res.status(statusCode).json({ msg });
+  } catch {
+    res.status(statusCode).json({ error });
+  }
+};
+const eliminarPlanMP = async (req, res) => {
+  const { msg, statusCode, error } = await eliminarPlanMPBD(req.params.idPlan);
   try {
     res.status(statusCode).json({ msg });
   } catch {
@@ -117,6 +139,7 @@ const obtenerPlanesVeterinario = async (req, res) => {
 module.exports = {
   crearPlan,
   agregarImagenPlan,
+  confirmacionPagoPlan,
   obtenerPlanes,
   obtenerUnPlan,
   editarPlan,
@@ -125,4 +148,5 @@ module.exports = {
   cancelarPlan,
   cancelarPlanComoVeterinario,
   obtenerPlanesVeterinario,
+  eliminarPlanMP,
 };
