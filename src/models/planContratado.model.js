@@ -23,7 +23,8 @@ const PlanContratadoSchema = new mongoose.Schema({
   },
   estado: {
     type: String,
-    default: "activo",
+    enum: ["activo", "pendiente"],
+    default: "pendiente",
   },
   creadoEn: {
     type: Date,

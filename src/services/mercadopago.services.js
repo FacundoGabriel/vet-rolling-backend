@@ -86,9 +86,9 @@ const mercadoPagoServicesPlanes = async (idPlan) => {
           },
         ],
         back_urls: {
-          success: `${process.env.FRONT_URL}/user/mis-mascotas?success`,
-          pending: `${process.env.FRONT_URL}/user/mis-mascotas?pending`,
-          failure: `${process.env.FRONT_URL}/user/mis-mascotas?failure`,
+          success: `${process.env.FRONT_URL}/confirmar-plan?status=success`,
+          pending: `${process.env.FRONT_URL}/confirmar-plan?status=pending`,
+          failure: `${process.env.FRONT_URL}/confirmar-plan?status=failure`,
         },
       },
     });

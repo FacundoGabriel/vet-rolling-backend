@@ -12,6 +12,7 @@ const {
   cambiarContraseniaRecuperacionBD,
   recuperarContraseniaUsuarioBD,
   habilitarMiCuentaBD,
+  eliminarMiCuentaBD,
 } = require("../services/usuarios.services");
 
 const registrarUsuario = async (req, res) => {
@@ -75,6 +76,14 @@ const bajaFisicaUsuarioPorId = async (req, res) => {
   const { msg, statusCode, error } = await bajaFisicaUsuarioPorIdBD(
     req.params.id
   );
+  try {
+    res.status(statusCode).json({ msg });
+  } catch {
+    res.status(statusCode).json({ error });
+  }
+};
+const eliminarMiCuenta = async (req, res) => {
+  const { msg, statusCode, error } = await eliminarMiCuentaBD(req.idUsuario);
   try {
     res.status(statusCode).json({ msg });
   } catch {
@@ -169,6 +178,7 @@ module.exports = {
   altaLogicaUsuarioPorId,
   bajaLogicaUsuarioPorId,
   bajaFisicaUsuarioPorId,
+  eliminarMiCuenta,
   editarInfoUsuarioPorId,
   cambiarContraseniaUsuario,
   obtenerTodosLosUsuarios,

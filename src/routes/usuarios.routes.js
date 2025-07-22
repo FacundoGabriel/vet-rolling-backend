@@ -13,6 +13,7 @@ const {
   recuperarContraseniaUsuario,
   cambiarContraseniaRecuperacion,
   habilitarMiCuenta,
+  eliminarMiCuenta,
 } = require("../controllers/usuarios.controllers");
 const router = Router();
 const { check } = require("express-validator");
@@ -67,10 +68,17 @@ router.put(
   bajaLogicaUsuarioPorId
 );
 router.delete(
-  "/:id",
+  "/eliminar-cuenta/:id",
   [check("id", "ID incorrecto. Formato no corresponde a mongoose").isMongoId()],
   validarCampos,
+  auth("admin"),
   bajaFisicaUsuarioPorId
+);
+router.delete(
+  "/eliminar-mi-cuenta",
+  validarCampos,
+  auth("usuario"),
+  eliminarMiCuenta
 );
 
 router.put(
@@ -101,7 +109,7 @@ router.put(
   cambiarContraseniaUsuario
 );
 
-router.get("/admin", [], validarCampos, auth("admin"), obtenerTodosLosUsuarios);
+router.get("/admin", validarCampos, auth("admin"), obtenerTodosLosUsuarios);
 router.get(
   "/:id",
   [check("id", "ID incorrecto. Formato no corresponde a mongoose").isMongoId()],
