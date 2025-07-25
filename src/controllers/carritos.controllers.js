@@ -7,7 +7,7 @@ const {
 
 const obtenerProductosDelCarrito = async (req, res) => {
   const { statusCode, productos, error } = await obtenerProductosDelCarritoBD(
-    req.idCarrito
+    req.idUsuario
   );
   try {
     res.status(statusCode).json({ productos });
