@@ -140,11 +140,11 @@ const mercadoPagoServicesCarrito = async (idCarrito) => {
       body: {
         items,
         back_urls: {
-          success: `${process.env.FRONT_URL}/user/carrito?success=true`,
-          pending: `${process.env.FRONT_URL}/user/carrito?pending=true`,
-          failure: `${process.env.FRONT_URL}/user/carrito?failure=true`,
+          success: "https://vet-rolling.vercel.app/user/carrito?success=true",
+          pending: "https://vet-rolling.vercel.app/user/carrito?pending=true",
+          failure: "https://vet-rolling.vercel.app/user/carrito?failure=true",
         },
-        /* auto_return: "approved", */
+        auto_return: "approved",
       },
     });
 
