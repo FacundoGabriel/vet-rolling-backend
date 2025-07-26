@@ -140,19 +140,17 @@ const mercadoPagoServicesCarrito = async (idCarrito) => {
       body: {
         items,
         back_urls: {
-          success: `${process.env.FRONT_URL}/user/carrito?status=success`,
-          pending: `${process.env.FRONT_URL}/user/carrito?status=pending`,
-          failure: `${process.env.FRONT_URL}/user/carrito?status=failure`,
+          success: "https://vet-rolling.vercel.app/user/carrito?success=true",
+          pending: "https://vet-rolling.vercel.app/user/carrito?pending=true",
+          failure: "https://vet-rolling.vercel.app/user/carrito?failure=true",
         },
+        auto_return: "approved",
       },
     });
 
     return {
       msg: "El link de pago para el carrito fue generado correctamente",
-      responseMp: {
-        id: res.id,
-        init_point: res.init_point,
-      },
+      initPoint: res.init_point,
       statusCode: 200,
     };
   } catch (error) {
