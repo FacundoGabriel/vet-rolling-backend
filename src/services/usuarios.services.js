@@ -111,7 +111,6 @@ const iniciarSesionUsuarioDB = async (body) => {
 
       return {
         msg: "Usuario logueado correctamente",
-        idUsuario: usuarioExiste._id,
         rolUsuario: usuarioExiste.rol,
         nombreUsuario: usuarioExiste.nombreUsuario,
         token,
@@ -130,8 +129,8 @@ const iniciarSesionUsuarioDB = async (body) => {
     };
   }
 };
-const agregarImagenUsuarioArray = async (idPlan, file) => {
-  const usuario = await UsuariosModel.findOne({ _id: idPlan });
+const agregarImagenUsuarioArray = async (idUsuario, file) => {
+  const usuario = await UsuariosModel.findOne({ _id: idUsuario });
   const imagen = await cloudinary.uploader.upload(file.path);
   usuario.foto = imagen.secure_url;
   await usuario.save();
@@ -279,6 +278,36 @@ const editarInfoUsuarioPorIdBD = async (idUsuario, body) => {
     };
   }
 };
+const editarMiPerfilBD = async (idUsuario, body) => {
+  try {
+    if (body.contrasenia) {
+      body.contrasenia = await argon.hash(body.contrasenia);
+    }
+    const usuarioExiste = await UsuariosModel.findByIdAndUpdate(
+      { _id: idUsuario },
+      body
+    );
+
+    if (!usuarioExiste) {
+      return {
+        msg: "Usuario no encontrado",
+        statusCode: 404,
+      };
+    }
+
+    return {
+      msg: "Usuario editado con exito",
+      idUsuario: usuarioExiste._id,
+      statusCode: 200,
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      error,
+      statusCode: 500,
+    };
+  }
+};
 
 const cambiarContraseniaUsuarioBD = async (idUsuario, body) => {
   try {
@@ -340,6 +369,20 @@ const obtenerTodosLosUsuariosDB = async () => {
 };
 
 const obtenerUnUsuarioPorIdBD = async (idUsuario) => {
+  try {
+    const usuario = await UsuariosModel.findOne({ _id: idUsuario });
+    return {
+      usuario,
+      statusCode: 200,
+    };
+  } catch (error) {
+    return {
+      error,
+      statusCode: 500,
+    };
+  }
+};
+const verMiPerfilBD = async (idUsuario) => {
   try {
     const usuario = await UsuariosModel.findOne({ _id: idUsuario });
     return {
@@ -455,12 +498,14 @@ module.exports = {
   iniciarSesionUsuarioDB,
   agregarImagenUsuarioArray,
   editarInfoUsuarioPorIdBD,
+  editarMiPerfilBD,
   cambiarContraseniaUsuarioBD,
   altaLogicaUsuarioPorIdBD,
   bajaLogicaUsuarioPorIdBD,
   bajaFisicaUsuarioPorIdBD,
   obtenerTodosLosUsuariosDB,
   obtenerUnUsuarioPorIdBD,
+  verMiPerfilBD,
   recuperarContraseniaUsuarioBD,
   cambiarContraseniaRecuperacionBD,
   habilitarMiCuentaBD,

@@ -13,6 +13,8 @@ const {
   recuperarContraseniaUsuarioBD,
   habilitarMiCuentaBD,
   eliminarMiCuentaBD,
+  editarMiPerfilBD,
+  verMiPerfilBD,
 } = require("../services/usuarios.services");
 
 const registrarUsuario = async (req, res) => {
@@ -26,19 +28,12 @@ const registrarUsuario = async (req, res) => {
 };
 
 const iniciarSesionUsuario = async (req, res) => {
-  const {
-    msg,
-    statusCode,
-    token,
-    error,
-    idUsuario,
-    rolUsuario,
-    nombreUsuario,
-  } = await iniciarSesionUsuarioDB(req.body);
+  const { msg, statusCode, token, error, rolUsuario, nombreUsuario } =
+    await iniciarSesionUsuarioDB(req.body);
   try {
     res
       .status(statusCode)
-      .json({ msg, idUsuario, statusCode, token, rolUsuario, nombreUsuario });
+      .json({ msg, statusCode, token, rolUsuario, nombreUsuario });
   } catch {
     res.status(statusCode).json(error);
   }
@@ -102,10 +97,21 @@ const editarInfoUsuarioPorId = async (req, res) => {
     res.status(statusCode).json({ error });
   }
 };
+const editarMiPerfil = async (req, res) => {
+  const { msg, statusCode, error, idUsuario } = await editarMiPerfilBD(
+    req.idUsuario,
+    req.body
+  );
+  try {
+    res.status(statusCode).json({ msg, idUsuario });
+  } catch {
+    res.status(statusCode).json({ error });
+  }
+};
 
 const cambiarContraseniaUsuario = async (req, res) => {
   const { msg, statusCode, error } = await cambiarContraseniaUsuarioBD(
-    req.params.id,
+    req.idUsuario,
     req.body
   );
   try {
@@ -128,6 +134,16 @@ const obtenerUnUsuarioPorId = async (req, res) => {
   const { usuario, msg, statusCode, error } = await obtenerUnUsuarioPorIdBD(
     req.params.id,
     req
+  );
+  try {
+    res.status(statusCode).json(msg ? { msg } : { usuario });
+  } catch {
+    res.status(statusCode).json({ error });
+  }
+};
+const verMiPerfil = async (req, res) => {
+  const { usuario, msg, statusCode, error } = await verMiPerfilBD(
+    req.idUsuario
   );
   try {
     res.status(statusCode).json(msg ? { msg } : { usuario });
@@ -186,4 +202,6 @@ module.exports = {
   recuperarContraseniaUsuario,
   cambiarContraseniaRecuperacion,
   habilitarMiCuenta,
+  editarMiPerfil,
+  verMiPerfil,
 };
