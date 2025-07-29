@@ -81,7 +81,6 @@ const vaciarCarritoBD = async (idUsuario) => {
       msg: "Carrito vaciado correctamente",
     };
   } catch (error) {
-    console.log(error);
     return {
       statusCode: 500,
       error,
