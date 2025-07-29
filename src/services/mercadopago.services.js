@@ -49,7 +49,6 @@ const mercadoPagoServicesServicio = async (idServicio) => {
       statusCode: 200,
     };
   } catch (error) {
-    console.error("Error en MercadoPago:", error);
     return {
       error,
       statusCode: 500,
@@ -102,7 +101,6 @@ const mercadoPagoServicesPlanes = async (idPlan) => {
       statusCode: 200,
     };
   } catch (error) {
-    console.error("Error en MercadoPago:", error);
     return {
       error,
       statusCode: 500,
@@ -156,7 +154,6 @@ const mercadoPagoServicesCarrito = async (idCarrito) => {
       statusCode: 200,
     };
   } catch (error) {
-    console.error("Error en MercadoPago:", error);
     return {
       error,
       statusCode: 500,
