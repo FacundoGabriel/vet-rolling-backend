@@ -16,7 +16,7 @@ const auth = require("../middlewares/auth");
 const router = Router();
 
 router.post(
-  "/crear-turno",
+  "/",
   [
     check("mascota", "Campo MASCOTA está vacío").notEmpty(),
     check("servicio", "Campo SERVICIO está vacío").notEmpty(),
@@ -65,7 +65,7 @@ router.get(
   obtenerTurnos
 );
 router.put(
-  "/confirmar-turno/:idTurno",
+  "/:idTurno",
   auth(["usuario", "admin", "veterinario"]),
   confirmarTurno
 );

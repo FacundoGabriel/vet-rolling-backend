@@ -5,7 +5,7 @@ const { procesarConsulta } = require("../controllers/contacto.controllers");
 const router = Router();
 
 router.post(
-  "/enviar",
+  "/",
   [
     check("nombre", "El nombre es obligatorio").notEmpty(),
     check("email", "El email es obligatorio").isEmail(),

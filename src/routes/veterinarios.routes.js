@@ -11,7 +11,7 @@ const validarCampos = require("../middlewares/validarCampos");
 const { check } = require("express-validator");
 
 router.post(
-  "/registro",
+  "/",
   [
     check("nombreUsuario", "Campo USUARIO esta vacio").notEmpty(),
     check("emailUsuario", "Campo EMAIL vacio").notEmpty(),
