@@ -89,6 +89,12 @@ const actualizarUnaMascotaBD = async (idMascota, body) => {
       statusCode: 200,
     };
   } catch (error) {
+    if (error.code === 11000) {
+      return {
+        msg: `No puedes tener dos mascotas con el mismo nombre.`,
+        statusCode: 409,
+      };
+    }
     return {
       error,
       statusCode: 500,

@@ -270,6 +270,12 @@ const editarInfoUsuarioPorIdBD = async (idUsuario, body) => {
       statusCode: 200,
     };
   } catch (error) {
+    if (error.code === 11000) {
+      return {
+        msg: `El usuario o correo ya está en uso.`,
+        statusCode: 409,
+      };
+    }
     return {
       error,
       statusCode: 500,
@@ -299,6 +305,12 @@ const editarMiPerfilBD = async (idUsuario, body) => {
       statusCode: 200,
     };
   } catch (error) {
+    if (error.code === 11000) {
+      return {
+        msg: `El usuario o correo ya está en uso.`,
+        statusCode: 409,
+      };
+    }
     return {
       error,
       statusCode: 500,
