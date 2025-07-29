@@ -105,7 +105,6 @@ const aprobarVeterinarioBD = async (idUsuario) => {
       statusCode: 200,
     };
   } catch (error) {
-    console.log(error);
     return {
       error,
       statusCode: 500,

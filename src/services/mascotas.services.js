@@ -20,7 +20,6 @@ const obtenerTodosTusMascotasBD = async (idUsuario) => {
       statusCode: 200,
     };
   } catch (error) {
-    console.log(error);
     return {
       error,
       statusCode: 500,
@@ -90,7 +89,6 @@ const actualizarUnaMascotaBD = async (idMascota, body) => {
       statusCode: 200,
     };
   } catch (error) {
-    console.log(error);
     return {
       error,
       statusCode: 500,
@@ -127,7 +125,6 @@ const eliminarUnaMascotaBD = async (idMascota, idUsuario) => {
       statusCode: 200,
     };
   } catch (error) {
-    console.error(error);
     return {
       error,
       statusCode: 500,

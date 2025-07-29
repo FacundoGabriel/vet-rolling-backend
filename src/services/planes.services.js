@@ -17,7 +17,6 @@ const crearPlanBD = async (body) => {
       statusCode: 201,
     };
   } catch (error) {
-    console.log(error);
     return {
       error,
       statusCode: 500,
@@ -147,7 +146,6 @@ const aniadirPlanBD = async (body, idUsuario) => {
       idPlan: nuevoPlan._id,
     };
   } catch (error) {
-    console.log(error);
     return {
       error,
       statusCode: 500,
@@ -195,7 +193,6 @@ const confirmacionPagoPlanBD = async (idPlan, idMascota, idUsuario) => {
       statusCode: 200,
     };
   } catch (error) {
-    console.error("Error al confirmar pago del plan:", error);
     return {
       msg: "Error interno del servidor",
       statusCode: 500,
@@ -218,7 +215,6 @@ const eliminarPlanMPBD = async (idPlan) => {
       statusCode: 200,
     };
   } catch (error) {
-    console.log(error);
     return {
       error,
       statusCode: 500,
@@ -257,7 +253,6 @@ const cancelarPlanBD = async (idMascota, idUsuario) => {
       statusCode: 200,
     };
   } catch (error) {
-    console.log(error);
     return {
       error,
       statusCode: 500,
@@ -298,7 +293,6 @@ const cancelarPlanComoVeterinarioBD = async (idMascota, idUsuario) => {
       statusCode: 200,
     };
   } catch (error) {
-    console.log(error);
     return {
       error,
       statusCode: 500,
@@ -318,7 +312,6 @@ const obtenerPlanesVeterinarioBD = async (idUsuario) => {
       statusCode: 200,
     };
   } catch (error) {
-    console.log(error);
     return {
       error,
       statusCode: 500,
