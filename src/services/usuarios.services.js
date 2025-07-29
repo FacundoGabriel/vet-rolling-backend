@@ -8,6 +8,9 @@ const {
   recuperarContrasenia,
 } = require("../utils/mensajes.nodemailer.utils");
 const cloudinary = require("../helpers/cloudinary.config.helpers");
+const MascotaModels = require("../models/mascota.models");
+const TurnoModels = require("../models/turno.model");
+const PlanContratadoModel = require("../models/planContratado.model");
 
 const registrarUsuarioBD = async (body) => {
   try {
@@ -108,7 +111,6 @@ const iniciarSesionUsuarioDB = async (body) => {
 
       return {
         msg: "Usuario logueado correctamente",
-        idUsuario: usuarioExiste._id,
         rolUsuario: usuarioExiste.rol,
         nombreUsuario: usuarioExiste.nombreUsuario,
         token,
@@ -127,8 +129,8 @@ const iniciarSesionUsuarioDB = async (body) => {
     };
   }
 };
-const agregarImagenUsuarioArray = async (idPlan, file) => {
-  const usuario = await UsuariosModel.findOne({ _id: idPlan });
+const agregarImagenUsuarioArray = async (idUsuario, file) => {
+  const usuario = await UsuariosModel.findOne({ _id: idUsuario });
   const imagen = await cloudinary.uploader.upload(file.path);
   usuario.foto = imagen.secure_url;
   await usuario.save();
@@ -156,7 +158,6 @@ const altaLogicaUsuarioPorIdBD = async (idUsuario) => {
       statusCode: 200,
     };
   } catch (error) {
-    console.log(error);
     return {
       error,
       statusCode: 500,
@@ -201,6 +202,38 @@ const bajaFisicaUsuarioPorIdBD = async (idUsuario) => {
 
     await CarritosModel.findByIdAndDelete(usuarioExiste.idCarrito);
     await FavoritosModel.findByIdAndDelete(usuarioExiste.idFavoritos);
+    await TurnoModels.deleteMany({ usuario: idUsuario });
+    await PlanContratadoModel.deleteMany({ usuario: idUsuario });
+    await MascotaModels.deleteMany({ propietario: idUsuario });
+    await UsuariosModel.findByIdAndDelete({ _id: idUsuario });
+
+    return {
+      msg: "Usuario borrado con exito!",
+      statusCode: 200,
+    };
+  } catch (error) {
+    return {
+      error,
+      statusCode: 500,
+    };
+  }
+};
+const eliminarMiCuentaBD = async (idUsuario) => {
+  try {
+    const usuarioExiste = await UsuariosModel.findOne({ _id: idUsuario });
+
+    if (!usuarioExiste) {
+      return {
+        msg: "Usuario no encontrado",
+        statusCode: 404,
+      };
+    }
+
+    await CarritosModel.findByIdAndDelete(usuarioExiste.idCarrito);
+    await FavoritosModel.findByIdAndDelete(usuarioExiste.idFavoritos);
+    await TurnoModels.deleteMany({ usuario: idUsuario });
+    await PlanContratadoModel.deleteMany({ usuario: idUsuario });
+    await MascotaModels.deleteMany({ propietario: idUsuario });
     await UsuariosModel.findByIdAndDelete({ _id: idUsuario });
 
     return {
@@ -237,7 +270,47 @@ const editarInfoUsuarioPorIdBD = async (idUsuario, body) => {
       statusCode: 200,
     };
   } catch (error) {
-    console.log(error);
+    if (error.code === 11000) {
+      return {
+        msg: `El usuario o correo ya está en uso.`,
+        statusCode: 409,
+      };
+    }
+    return {
+      error,
+      statusCode: 500,
+    };
+  }
+};
+const editarMiPerfilBD = async (idUsuario, body) => {
+  try {
+    if (body.contrasenia) {
+      body.contrasenia = await argon.hash(body.contrasenia);
+    }
+    const usuarioExiste = await UsuariosModel.findByIdAndUpdate(
+      { _id: idUsuario },
+      body
+    );
+
+    if (!usuarioExiste) {
+      return {
+        msg: "Usuario no encontrado",
+        statusCode: 404,
+      };
+    }
+
+    return {
+      msg: "Usuario editado con exito",
+      idUsuario: usuarioExiste._id,
+      statusCode: 200,
+    };
+  } catch (error) {
+    if (error.code === 11000) {
+      return {
+        msg: `El usuario o correo ya está en uso.`,
+        statusCode: 409,
+      };
+    }
     return {
       error,
       statusCode: 500,
@@ -305,6 +378,20 @@ const obtenerTodosLosUsuariosDB = async () => {
 };
 
 const obtenerUnUsuarioPorIdBD = async (idUsuario) => {
+  try {
+    const usuario = await UsuariosModel.findOne({ _id: idUsuario });
+    return {
+      usuario,
+      statusCode: 200,
+    };
+  } catch (error) {
+    return {
+      error,
+      statusCode: 500,
+    };
+  }
+};
+const verMiPerfilBD = async (idUsuario) => {
   try {
     const usuario = await UsuariosModel.findOne({ _id: idUsuario });
     return {
@@ -416,15 +503,18 @@ const habilitarMiCuentaBD = async (token) => {
 
 module.exports = {
   registrarUsuarioBD,
+  eliminarMiCuentaBD,
   iniciarSesionUsuarioDB,
   agregarImagenUsuarioArray,
   editarInfoUsuarioPorIdBD,
+  editarMiPerfilBD,
   cambiarContraseniaUsuarioBD,
   altaLogicaUsuarioPorIdBD,
   bajaLogicaUsuarioPorIdBD,
   bajaFisicaUsuarioPorIdBD,
   obtenerTodosLosUsuariosDB,
   obtenerUnUsuarioPorIdBD,
+  verMiPerfilBD,
   recuperarContraseniaUsuarioBD,
   cambiarContraseniaRecuperacionBD,
   habilitarMiCuentaBD,

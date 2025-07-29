@@ -13,6 +13,9 @@ const {
   recuperarContraseniaUsuario,
   cambiarContraseniaRecuperacion,
   habilitarMiCuenta,
+  eliminarMiCuenta,
+  editarMiPerfil,
+  verMiPerfil,
 } = require("../controllers/usuarios.controllers");
 const router = Router();
 const { check } = require("express-validator");
@@ -67,10 +70,17 @@ router.put(
   bajaLogicaUsuarioPorId
 );
 router.delete(
-  "/:id",
+  "/eliminar-cuenta/:id",
   [check("id", "ID incorrecto. Formato no corresponde a mongoose").isMongoId()],
   validarCampos,
+  auth("admin"),
   bajaFisicaUsuarioPorId
+);
+router.delete(
+  "/eliminar-mi-cuenta",
+  validarCampos,
+  auth("usuario"),
+  eliminarMiCuenta
 );
 
 router.put(
@@ -82,14 +92,24 @@ router.put(
     check("telefono", "Campo TELEFONO vacio").notEmpty(),
   ],
   validarCampos,
-  auth(["usuario", "admin", "veterinario"]),
+  auth(["admin"]),
   editarInfoUsuarioPorId
+);
+router.put(
+  "/editar-mi-perfil",
+  [
+    check("nombreUsuario", "Campo USUARIO esta vacio").notEmpty(),
+    check("emailUsuario", "Campo EMAIL vacio").notEmpty(),
+    check("telefono", "Campo TELEFONO vacio").notEmpty(),
+  ],
+  validarCampos,
+  auth(["usuario", "veterinario", "admin"]),
+  editarMiPerfil
 );
 
 router.put(
-  "/cambiar-contrasenia/:id",
+  "/cambiar-contrasenia",
   [
-    check("id", "ID incorrecto. Formato no corresponde a mongoose").isMongoId(),
     check("actual", "Campo CONTRASEÑA vacio").notEmpty(),
     check("nueva", "ERROR. caracteres soportados solo entre 8 y 40").isLength(
       { min: 8 },
@@ -101,12 +121,18 @@ router.put(
   cambiarContraseniaUsuario
 );
 
-router.get("/admin", [], validarCampos, auth("admin"), obtenerTodosLosUsuarios);
+router.get("/admin", validarCampos, auth("admin"), obtenerTodosLosUsuarios);
 router.get(
-  "/:id",
+  "/obtener-usuario/:id",
   [check("id", "ID incorrecto. Formato no corresponde a mongoose").isMongoId()],
-  auth(["usuario", "admin", "veterinario"]),
+  auth("admin"),
   obtenerUnUsuarioPorId
+);
+router.get(
+  "/ver-mi-perfil",
+  validarCampos,
+  auth(["usuario", "admin", "veterinario"]),
+  verMiPerfil
 );
 
 router.post("/recoveryPass", recuperarContraseniaUsuario);

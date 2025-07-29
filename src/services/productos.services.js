@@ -48,7 +48,12 @@ const crearUnProductoBD = async (body) => {
       statusCode: 201,
     };
   } catch (error) {
-    console.log(error);
+    if (error.code === 11000) {
+      return {
+        msg: `ERROR. Ya existe un producto con el nombre ${body.nombre}`,
+        statusCode: 409,
+      };
+    }
     return {
       error,
       statusCode: 500,
@@ -76,6 +81,12 @@ const actualizarUnProductoBD = async (idProducto, body) => {
       statusCode: 200,
     };
   } catch (error) {
+    if (error.code === 11000) {
+      return {
+        msg: `ERROR. Ya existe un producto con el nombre ${body.nombre}`,
+        statusCode: 409,
+      };
+    }
     return {
       error,
       statusCode: 500,

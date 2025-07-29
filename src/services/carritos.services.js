@@ -1,11 +1,11 @@
 const CarritosModel = require("../models/carritos.model");
 const ProductosModel = require("../models/productos.model");
 
-const obtenerProductosDelCarritoBD = async (idCarrito) => {
+const obtenerProductosDelCarritoBD = async (idUsuario) => {
   try {
-    const carrito = await CarritosModel.findOne({ _id: idCarrito });
+    const carrito = await CarritosModel.findOne({ idUsuario: idUsuario });
     return {
-      productos: carrito.productos,
+      productos: carrito ? carrito.productos : [],
       statusCode: 200,
     };
   } catch (error) {
@@ -72,8 +72,8 @@ const eliminarProductoCarritoBD = async (idCarrito, idProducto) => {
 
 const vaciarCarritoBD = async (idUsuario) => {
   try {
-    await Carrito.updateOne(
-      { usuario: idUsuario },
+    await CarritosModel.updateOne(
+      { idUsuario: idUsuario },
       { $set: { productos: [] } }
     );
     return {

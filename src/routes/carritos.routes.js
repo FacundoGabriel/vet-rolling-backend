@@ -10,11 +10,7 @@ const { check } = require("express-validator");
 const auth = require("../middlewares/auth");
 const router = Router();
 
-router.get(
-  "/obtenerProductos",
-  auth(["usuario", "admin"]),
-  obtenerProductosDelCarrito
-);
+router.get("/", auth(["usuario", "admin"]), obtenerProductosDelCarrito);
 
 router.put(
   "/agregarProducto/:idProducto",

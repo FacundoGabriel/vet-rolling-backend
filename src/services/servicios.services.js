@@ -33,6 +33,12 @@ const agregarUnServicioBD = async (body) => {
       statusCode: 201,
     };
   } catch (error) {
+    if (error.code === 11000) {
+      return {
+        msg: `ERROR. Ya existe un servicio con este nombre`,
+        statusCode: 409,
+      };
+    }
     return {
       msgError: error.message,
       statusCode: 500,
@@ -91,6 +97,12 @@ const actualizarUnServicioBD = async (idServicio, body) => {
       statusCode: 200,
     };
   } catch (error) {
+    if (error.code === 11000) {
+      return {
+        msg: `Ya existe un servicio con este nombre.`,
+        statusCode: 409,
+      };
+    }
     return {
       msg: error,
       statusCode: 500,

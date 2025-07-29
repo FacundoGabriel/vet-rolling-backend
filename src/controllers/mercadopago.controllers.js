@@ -18,11 +18,11 @@ const pagarPlanesMP = async (req, res) => {
 };
 
 const pagarProductosCarrito = async (req, res) => {
-  const { statusCode, msg, responseMp, error } =
+  const { statusCode, msg, initPoint, error } =
     await mercadoPagoServicesCarrito(req.idCarrito);
 
   try {
-    res.status(statusCode).json({ msg, responseMp });
+    res.status(statusCode).json({ msg, initPoint });
   } catch (error) {
     res.status(statusCode).json({ error });
   }

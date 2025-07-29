@@ -49,7 +49,6 @@ const mercadoPagoServicesServicio = async (idServicio) => {
       statusCode: 200,
     };
   } catch (error) {
-    console.error("Error en MercadoPago:", error);
     return {
       error,
       statusCode: 500,
@@ -86,9 +85,9 @@ const mercadoPagoServicesPlanes = async (idPlan) => {
           },
         ],
         back_urls: {
-          success: `${process.env.FRONT_URL}/user/mis-mascotas?success`,
-          pending: `${process.env.FRONT_URL}/user/mis-mascotas?pending`,
-          failure: `${process.env.FRONT_URL}/user/mis-mascotas?failure`,
+          success: `${process.env.FRONT_URL}/confirmar-plan?status=success`,
+          pending: `${process.env.FRONT_URL}/confirmar-plan?status=pending`,
+          failure: `${process.env.FRONT_URL}/confirmar-plan?status=failure`,
         },
       },
     });
@@ -102,7 +101,6 @@ const mercadoPagoServicesPlanes = async (idPlan) => {
       statusCode: 200,
     };
   } catch (error) {
-    console.error("Error en MercadoPago:", error);
     return {
       error,
       statusCode: 500,
@@ -140,23 +138,20 @@ const mercadoPagoServicesCarrito = async (idCarrito) => {
       body: {
         items,
         back_urls: {
-          success: `${process.env.FRONT_URL}/user/carrito?status=success`,
-          pending: `${process.env.FRONT_URL}/user/carrito?status=pending`,
-          failure: `${process.env.FRONT_URL}/user/carrito?status=failure`,
+          success: "https://vet-rolling.vercel.app/user/carrito?success=true",
+          pending: "https://vet-rolling.vercel.app/user/carrito?pending=true",
+          failure: "https://vet-rolling.vercel.app/user/carrito?failure=true",
         },
+        auto_return: "approved",
       },
     });
 
     return {
       msg: "El link de pago para el carrito fue generado correctamente",
-      responseMp: {
-        id: res.id,
-        init_point: res.init_point,
-      },
+      initPoint: res.init_point,
       statusCode: 200,
     };
   } catch (error) {
-    console.error("Error en MercadoPago:", error);
     return {
       error,
       statusCode: 500,

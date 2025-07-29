@@ -27,8 +27,6 @@ const registroExitoso = async (userEmail, nameUser, token) => {
     `,
   });
 
-  console.log(info);
-
   return {
     info: info.response.includes("OK"),
     rejected: info.rejected,

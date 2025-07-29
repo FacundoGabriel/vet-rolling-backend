@@ -62,7 +62,6 @@ const crearTurnoBD = async (body, idUsuario) => {
         statusCode: 409,
       };
     }
-    console.log(error);
     return {
       error,
       statusCode: 500,
@@ -87,7 +86,6 @@ const cancelarTurnoBD = async (idTurno, idUsuario) => {
       statusCode: 200,
     };
   } catch (error) {
-    console.log(error);
     return {
       error,
       statusCode: 500,
@@ -120,7 +118,6 @@ const cancelarTurnoComoVeterinarioBD = async (idTurno, idVeterinario) => {
       statusCode: 200,
     };
   } catch (error) {
-    console.log(error);
     return {
       error,
       statusCode: 500,
@@ -142,7 +139,6 @@ const obtenerTurnosVeterinarioBD = async (idVeterinario) => {
       statusCode: 200,
     };
   } catch (error) {
-    console.log(error);
     return {
       error,
       statusCode: 500,
@@ -163,7 +159,6 @@ const obtenerTurnosBD = async (idUsuario) => {
       statusCode: 200,
     };
   } catch (error) {
-    console.log(error);
     return {
       error,
       statusCode: 500,
@@ -186,7 +181,6 @@ const confirmarTurnoBD = async (idTurno) => {
       statusCode: 200,
     };
   } catch (error) {
-    console.log(error);
     return {
       error,
       statusCode: 500,
