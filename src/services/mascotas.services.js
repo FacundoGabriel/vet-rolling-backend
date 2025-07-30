@@ -1,6 +1,8 @@
 const MascotaModels = require("../models/mascota.models");
 const UsuariosModel = require("../models/usuarios.model");
 const cloudinary = require("../helpers/cloudinary.config.helpers");
+const TurnoModels = require("../models/turno.model");
+const PlanContratadoModel = require("../models/planContratado.model");
 
 const obtenerTodosTusMascotasBD = async (idUsuario) => {
   try {
@@ -105,6 +107,22 @@ const actualizarUnaMascotaBD = async (idMascota, body) => {
 const eliminarUnaMascotaBD = async (idMascota, idUsuario) => {
   try {
     const mascotaExiste = await MascotaModels.findOne({ _id: idMascota });
+    const turnoMascota = await TurnoModels.findOne({ mascota: idMascota });
+    const planMascota = await PlanContratadoModel.findOne({
+      mascota: idMascota,
+    });
+    if (turnoMascota) {
+      return {
+        msg: "No se puede eliminar la mascota porque tiene un turno asociado.",
+        statusCode: 400,
+      };
+    }
+    if (planMascota) {
+      return {
+        msg: "No se puede eliminar la mascota porque tiene un plan contratado.",
+        statusCode: 400,
+      };
+    }
 
     if (!mascotaExiste) {
       return {
