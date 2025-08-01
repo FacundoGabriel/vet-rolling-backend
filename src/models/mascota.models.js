@@ -21,9 +21,12 @@ const MascotaSchema = new mongoose.Schema({
   raza: {
     type: String,
     trim: true,
+    required: [true, "La raza es obligatoria"],
+    minLength: [2, "La raza debe tener al menos 2 caracteres"],
+    maxLength: [30, "La raza no puede superar los 30 caracteres"],
     match: [
-      /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s]+$/,
-      "La raza solo puede contener letras y espacios",
+      /^[a-zA-ZáéíóúÁÉÍÓÚñÑ\s'-]+$/,
+      "La raza solo puede contener letras, espacios, guiones y apóstrofes",
     ],
   },
   sexo: {
@@ -32,7 +35,22 @@ const MascotaSchema = new mongoose.Schema({
   },
   peso: {
     type: Number,
-    min: [0.1, "El peso debe ser mayor que cero"],
+    required: [true, "El peso es obligatorio"],
+    min: [0.1, "El peso debe ser mayor"],
+    validate: {
+      validator: function (value) {
+        if (this.especie === "gato" && value > 15) return false;
+        if (this.especie === "perro" && value > 100) return false;
+        return true;
+      },
+      message: function () {
+        if (this.especie === "gato")
+          return "El peso de un gato no puede superar los 15 kg";
+        if (this.especie === "perro")
+          return "El peso de un perro no puede superar los 100 kg";
+        return "Peso inválido";
+      },
+    },
   },
   fechaNacimiento: {
     type: Date,
